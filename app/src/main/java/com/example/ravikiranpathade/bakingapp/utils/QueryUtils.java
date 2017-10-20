@@ -54,7 +54,7 @@ public class QueryUtils {
 
             BufferedReader bufferdReader = new BufferedReader(isReader);
 
-            String line = bufferdReader.readLine();
+            String line ;
 
 
 
@@ -117,16 +117,18 @@ public class QueryUtils {
 
 
         try{
-            JSONObject baseObject = new JSONObject(json);
 
-           // JSONArray baseArray = new JSONArray(json);
+
+           // JSONObject baseObject = new JSONObject(json);
+
+            JSONArray baseArray = new JSONArray(json);
 
             //TODO Convert JSONArray -- Error Here
 
-            JSONArray sample = new JSONArray(json);
-            for(int i = 0 ;i < baseObject.length() ; i++){
+            //JSONArray sample = new JSONArray(json);
+            for(int i = 0 ;i < baseArray.length() ; i++){
 
-
+                JSONObject baseObject = baseArray.getJSONObject(i);
                // Log.d("Check",sample.toString());
                 String id = baseObject.getString("id");
                 String name = baseObject.getString("name");

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
+import com.example.ravikiranpathade.bakingapp.singleList.StepForRecipe;
 import com.example.ravikiranpathade.bakingapp.utils.QueryUtils;
 
 import java.io.IOException;
@@ -60,6 +62,16 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0 ; i< recipeLists.size();i++){
                 RecipeList recipeList = recipeLists.get(i);
                 Log.d("ID Here "+recipeList.getId(),recipeList.getRecipeName());
+                List<Ingredients> sample = recipeList.getIngredients();
+//                for(int j = 0; j < sample.size() ; j++){
+//                    Ingredients ig = sample.get(j);
+//                    Log.d(String.valueOf(ig.getQuantity()+ig.getQuantity()),ig.getIngredient_name());
+//                }
+//                List<StepForRecipe> sampleS = recipeList.getSteps();
+//                for(int j = 0; j < sampleS.size() ; j++){
+//                    StepForRecipe stepForRecipes = sampleS.get(j);
+//                    Log.d(stepForRecipes.getDesc(),stepForRecipes.getVideoUrl());
+//                }
             }
             return null;
         }
