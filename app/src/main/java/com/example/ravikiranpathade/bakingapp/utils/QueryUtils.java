@@ -2,6 +2,13 @@ package com.example.ravikiranpathade.bakingapp.utils;
 
 import android.util.Log;
 
+import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
+import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
+import com.example.ravikiranpathade.bakingapp.singleList.StepForRecipe;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ravikiranpathade on 10/9/17.
@@ -49,11 +58,11 @@ public class QueryUtils {
 
 
 
-            while(bufferdReader.readLine()!=null){
+            while((line = bufferdReader.readLine())!=null){
                 //Log.d("Line "," Entered");
-              
+
                 output.append(line);
-                line = bufferdReader.readLine();
+               // line = bufferdReader.readLine();
 
             }
         Log.d("Reponse ", output.toString());
@@ -96,6 +105,69 @@ public class QueryUtils {
         return response;
     }
 
+
+    public static List<RecipeList> extractRecipes(String json){
+        List<RecipeList> recipeListList = new ArrayList<>();
+        List<Ingredients> ingredientsList = new ArrayList<>();
+        List<StepForRecipe> stepForRecipeList = new ArrayList<>();
+
+        if(json==null ||json.isEmpty()){
+            return null;
+        }
+
+
+        try{
+            JSONObject baseObject = new JSONObject(json);
+
+           // JSONArray baseArray = new JSONArray(json);
+
+            //TODO Convert JSONArray -- Error Here
+
+            JSONArray sample = new JSONArray(json);
+            for(int i = 0 ;i < baseObject.length() ; i++){
+
+
+               // Log.d("Check",sample.toString());
+                String id = baseObject.getString("id");
+                String name = baseObject.getString("name");
+
+                JSONArray baseArrayIngredients = baseObject.getJSONArray("ingredients");
+                for(int j = 0 ;j < baseArrayIngredients.length() ; j++){
+                    JSONObject current = baseArrayIngredients.getJSONObject(j);
+                    int quantity = current.getInt("quantity");
+                    String measure = current.getString("measure");
+                    String ingredient = current.getString("ingredient");
+                    Log.d(measure,ingredient);
+                    ingredientsList.add(new Ingredients(quantity,measure,ingredient));
+                    //Log.d(quantity+" "+measure,ingredient);
+                }
+
+                JSONArray baseArraySteps = baseObject.getJSONArray("steps");
+                for(int j = 0 ;j < baseArraySteps.length() ; j++){
+                    JSONObject current = baseArraySteps.getJSONObject(j);
+                    int id_step = current.getInt("id");
+                    String shortDescription = current.getString("shortDescription");
+                    String description = current.getString("description");
+                    String videoURL = current.getString("videoURL");
+                    String thumbnailURL = current.getString("thumbnailURL");
+                    stepForRecipeList.add(new StepForRecipe(id_step,shortDescription,description,videoURL,thumbnailURL));
+                    //Log.d(quantity+" "+measure,ingredient);
+                }
+                int servings = baseObject.getInt("servings");
+                Log.d("Query "+id,name);
+                recipeListList.add(new RecipeList(id,name,ingredientsList,stepForRecipeList,servings));
+
+            }
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return recipeListList;
+    }
 
 }
 
