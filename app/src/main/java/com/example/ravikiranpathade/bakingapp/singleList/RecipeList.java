@@ -49,8 +49,7 @@ public class RecipeList {
     }
 
 
-
-    public RecipeList(String mId,String mRecipeName){
+    public RecipeList(String mId, String mRecipeName) {
         this.id = mId;
         this.recipeName = mRecipeName;
     }

@@ -23,18 +23,11 @@ import layout.RecipeListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<RecipeList> recipeLists;
-   // @BindView(R.id.sampleText) TextView sample;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-//        ButterKnife.bind(this);
-//        sample.setText("Something like this");
 
         RecipeListFragment recipeList = new RecipeListFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -42,38 +35,9 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragmentContainer, recipeList)
                 .commit();
 
-        new FetchRecipes().execute();
+
 
     }
 
-    public class FetchRecipes extends AsyncTask<String , Void, Void>{
-        @Override
-        protected Void doInBackground(String... params) {
-            String res =null ;
-                    try {
-                     res = QueryUtils.makeHTTPrequest(QueryUtils.createURL(QueryUtils.QUERY_URL));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-            recipeLists = new ArrayList<>();
-            recipeLists = QueryUtils.extractRecipes(res);
-
-            for(int i = 0 ; i< recipeLists.size();i++){
-                RecipeList recipeList = recipeLists.get(i);
-                Log.d("ID Here "+recipeList.getId(),recipeList.getRecipeName());
-                List<Ingredients> sample = recipeList.getIngredients();
-//                for(int j = 0; j < sample.size() ; j++){
-//                    Ingredients ig = sample.get(j);
-//                    Log.d(String.valueOf(ig.getQuantity()+ig.getQuantity()),ig.getIngredient_name());
-//                }
-//                List<StepForRecipe> sampleS = recipeList.getSteps();
-//                for(int j = 0; j < sampleS.size() ; j++){
-//                    StepForRecipe stepForRecipes = sampleS.get(j);
-//                    Log.d(stepForRecipes.getDesc(),stepForRecipes.getVideoUrl());
-//                }
-            }
-            return null;
-        }
     }
-}
+

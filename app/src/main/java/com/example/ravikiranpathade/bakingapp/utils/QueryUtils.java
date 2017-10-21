@@ -65,7 +65,7 @@ public class QueryUtils {
                // line = bufferdReader.readLine();
 
             }
-        Log.d("Reponse ", output.toString());
+       // Log.d("Reponse ", output.toString());
 
 
         }
@@ -119,13 +119,13 @@ public class QueryUtils {
         try{
 
 
-           // JSONObject baseObject = new JSONObject(json);
+           //
 
             JSONArray baseArray = new JSONArray(json);
 
-            //TODO Convert JSONArray -- Error Here
+            //Done Convert JSONArray -- Error Here
 
-            //JSONArray sample = new JSONArray(json);
+
             for(int i = 0 ;i < baseArray.length() ; i++){
 
                 JSONObject baseObject = baseArray.getJSONObject(i);
@@ -156,7 +156,7 @@ public class QueryUtils {
                     //Log.d(quantity+" "+measure,ingredient);
                 }
                 int servings = baseObject.getInt("servings");
-                Log.d("Query "+id,name);
+
                 recipeListList.add(new RecipeList(id,name,ingredientsList,stepForRecipeList,servings));
 
             }
