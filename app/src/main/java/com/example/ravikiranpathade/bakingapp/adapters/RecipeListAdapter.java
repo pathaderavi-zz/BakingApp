@@ -87,7 +87,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         notifyDataSetChanged();
     }
 
-    class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class RecipeListViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.recipeListButton) Button mRecipeListButton;
         //@BindView(R.id.testText)
         //TextView mRecipeListButton;
@@ -97,30 +97,23 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             super(itemView);
             mHolderContext = itemView.getContext();
             ButterKnife.bind(this,itemView);
-            itemView.setOnClickListener(this);
+
             Log.d("ViewHolder Here ", "Bind");
 
         }
 
         public void bind(int id) {
 
-            Log.d("Check Bind "+String.valueOf(mRecipeListButton!=null), mRecipeList.get(id).getRecipeName());
-            //mRecipeListButton.setText(mRecipeList.get(id).getRecipeName());
+            mRecipeListButton.setText(mRecipeList.get(id).getRecipeName());
+
+            mRecipeListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Button Clicked",mRecipeList.get(getAdapterPosition()).getRecipeName());
+                }
+            });
         }
 
-        @Override
-        public void onClick(View v) {
 
-            int pos = getAdapterPosition();
-            String rId = mRecipeList.get(pos).getId();
-
-            Log.d("Button Clicked",String.valueOf(pos));
-            Toast.makeText(v.getContext(),String.valueOf(pos),Toast.LENGTH_SHORT).show();
-            //mRecipeListButton.setText(String.valueOf(pos));
-            //TODO Implement Intent
-//            intent = new Intent();
-//            mHolderContext.startActivity(intent);
-
-        }
     }
 }
