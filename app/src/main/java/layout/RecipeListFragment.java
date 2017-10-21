@@ -4,7 +4,9 @@ package layout;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +41,8 @@ public class RecipeListFragment extends Fragment {
     @BindView(R.id.recipeListRecycler)
     RecyclerView recipeListRecycler;
     LinearLayoutManager linearLayoutManager;
-
+    Bundle bundle;
+    boolean tablet;
     public RecipeListFragment() {
         // Required empty public constructor
     }
@@ -53,11 +56,18 @@ public class RecipeListFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
+        bundle = new Bundle();
+
 
         view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+        tablet = (view.findViewById(R.id.fragmentContainerTablet)!=null);
         ButterKnife.bind(this, view);
-        recipeListRecycler.setLayoutManager(linearLayoutManager);
-        recipeListRecycler.setHasFixedSize(true);
+        if(!tablet) {
+            recipeListRecycler.setLayoutManager(linearLayoutManager);
+            recipeListRecycler.setHasFixedSize(true);
+        }else{
+            recipeListRecycler.setLayoutManager(new GridLayoutManager(view.getContext(),3));
+        }
 
         recipeLists = new ArrayList<>();
 
@@ -87,6 +97,7 @@ public class RecipeListFragment extends Fragment {
             super.onPostExecute(aVoid);
             recipeListAdapter = new RecipeListAdapter(recipeLists);
             recipeListRecycler.setAdapter(recipeListAdapter);
+            //bundle.putParcelableArrayList("recipes", (ArrayList<? extends Parcelable>) recipeLists);
         }
     }
 }
