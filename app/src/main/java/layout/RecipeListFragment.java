@@ -65,7 +65,7 @@ public class RecipeListFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         tablet = (view.findViewById(R.id.fragmentContainerTablet)!=null);
-        ButterKnife.bind(this, view);
+        bind = ButterKnife.bind(this, view);
         if(!tablet) {
             recipeListRecycler.setLayoutManager(linearLayoutManager);
             recipeListRecycler.setHasFixedSize(true);
@@ -79,11 +79,15 @@ public class RecipeListFragment extends Fragment {
             recipeLists = savedInstanceState.getParcelableArrayList("wholeArray");
             recipeListAdapter = new RecipeListAdapter(recipeLists);
             recipeListRecycler.setAdapter(recipeListAdapter);
+            Log.d("Check Run Bundle",recipeLists.get(0).getRecipeName());
 
         }
         //Log.d("Fetch Execute Check",String.valueOf(bundle==null));
+        if(!recipeLists.isEmpty()){
+            Log.d("Check Run",recipeLists.get(0).getRecipeName());
+        }
         if(bundle==null) {
-
+            Log.d("Check Run","Fetch Execute");
             new FetchRecipes().execute();
         }
         //recipeListButton.setText("Fragment Set");
@@ -125,6 +129,7 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("wholeArray", (ArrayList<? extends Parcelable>) recipeLists);
+        //getActivity().getSupportFragmentManager().putFragment(outState,"Recipe_Fragment",);
         super.onSaveInstanceState(outState);
 
     }
@@ -138,6 +143,6 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //bind.unbind();
+        bind.unbind();
     }
 }
