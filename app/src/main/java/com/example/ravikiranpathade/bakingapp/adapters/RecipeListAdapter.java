@@ -3,6 +3,8 @@ package com.example.ravikiranpathade.bakingapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ravikiranpathade.bakingapp.R;
+import com.example.ravikiranpathade.bakingapp.RecipeStepsActivity;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,7 +54,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     public RecipeListAdapter(List<RecipeList> rDetails) {
         mRecipeList = rDetails;
-        Log.d("Constructor ", "Bind");
+
     }
 
     @Override
@@ -64,13 +68,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         View view = layoutInflater.inflate(layourId, parent, shouldAttachImmediately);
 
         RecipeListViewHolder rHolder = new RecipeListViewHolder(view);
-        Log.d("Holder ", "Bind");
         return rHolder;
     }
 
     @Override
     public void onBindViewHolder(final RecipeListViewHolder holder, int position) {
-        Log.d("onCreateViewHolder "+String.valueOf(mRecipeList.get(position).getId()), String.valueOf(context!=null));
 
         //mRecipeListButton.setText("Check Text ");
         holder.bind(position);
@@ -98,7 +100,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mHolderContext = itemView.getContext();
             ButterKnife.bind(this,itemView);
 
-            Log.d("ViewHolder Here ", "Bind");
+
 
         }
 
@@ -109,7 +111,15 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mRecipeListButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("Button Clicked",mRecipeList.get(getAdapterPosition()).getRecipeName());
+
+                    //Log.d("Button Clicked",mRecipeList.get(getAdapterPosition()).getRecipeName());
+
+                    Intent newIntent = new Intent(context, RecipeStepsActivity.class);
+
+                    newIntent.putParcelableArrayListExtra("check", (ArrayList<? extends Parcelable>) mRecipeList);
+                    newIntent.putExtra("id",getAdapterPosition());
+                    context.startActivity(newIntent);
+
                 }
             });
         }

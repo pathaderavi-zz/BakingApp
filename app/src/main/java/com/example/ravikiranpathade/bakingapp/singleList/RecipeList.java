@@ -1,12 +1,15 @@
 package com.example.ravikiranpathade.bakingapp.singleList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by ravikiranpathade on 10/13/17.
  */
 
-public class RecipeList {
+public class RecipeList implements Parcelable {
 
     String id;
     String recipeName;
@@ -19,6 +22,26 @@ public class RecipeList {
         Servings = servings;
     }
 
+
+    protected RecipeList(Parcel in) {
+        id = in.readString();
+        recipeName = in.readString();
+        ingredients = in.createTypedArrayList(Ingredients.CREATOR);
+        steps = in.createTypedArrayList(StepForRecipe.CREATOR);
+        Servings = in.readInt();
+    }
+
+    public static final Creator<RecipeList> CREATOR = new Creator<RecipeList>() {
+        @Override
+        public RecipeList createFromParcel(Parcel in) {
+            return new RecipeList(in);
+        }
+
+        @Override
+        public RecipeList[] newArray(int size) {
+            return new RecipeList[size];
+        }
+    };
 
     public int getServings() {
         return Servings;
@@ -52,5 +75,20 @@ public class RecipeList {
     public RecipeList(String mId, String mRecipeName) {
         this.id = mId;
         this.recipeName = mRecipeName;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(recipeName);
+        dest.writeTypedList(ingredients);
+        dest.writeTypedList(steps);
+        dest.writeInt(getServings());
+
     }
 }

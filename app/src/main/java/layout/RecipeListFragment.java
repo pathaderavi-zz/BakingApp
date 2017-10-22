@@ -3,8 +3,10 @@ package layout;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static android.support.v7.recyclerview.R.attr.layoutManager;
 
@@ -43,6 +46,7 @@ public class RecipeListFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     Bundle bundle;
     boolean tablet;
+    Unbinder bind;
     public RecipeListFragment() {
         // Required empty public constructor
     }
@@ -56,7 +60,7 @@ public class RecipeListFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
-        bundle = new Bundle();
+        bundle = savedInstanceState;
 
 
         view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
@@ -70,9 +74,18 @@ public class RecipeListFragment extends Fragment {
         }
 
         recipeLists = new ArrayList<>();
+        if(bundle!=null) {
+            //Log.d("Fetch Executed There",bundle.toString());
+            recipeLists = savedInstanceState.getParcelableArrayList("wholeArray");
+            recipeListAdapter = new RecipeListAdapter(recipeLists);
+            recipeListRecycler.setAdapter(recipeListAdapter);
 
+        }
+        //Log.d("Fetch Execute Check",String.valueOf(bundle==null));
+        if(bundle==null) {
 
-        new FetchRecipes().execute();
+            new FetchRecipes().execute();
+        }
         //recipeListButton.setText("Fragment Set");
         return view;
     }
@@ -82,13 +95,18 @@ public class RecipeListFragment extends Fragment {
         protected Void doInBackground(String... params) {
             String res = null;
             try {
-                res = QueryUtils.makeHTTPrequest(QueryUtils.createURL(QueryUtils.QUERY_URL));
+               // Log.d("Check Bundle",String.valueOf(bundle==null));
+
+                    res = QueryUtils.makeHTTPrequest(QueryUtils.createURL(QueryUtils.QUERY_URL));
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            recipeLists = QueryUtils.extractRecipes(res);
-            Log.d("Fetch","Executed");
+                recipeLists = QueryUtils.extractRecipes(res);
+
+
             return null;
         }
 
@@ -97,7 +115,29 @@ public class RecipeListFragment extends Fragment {
             super.onPostExecute(aVoid);
             recipeListAdapter = new RecipeListAdapter(recipeLists);
             recipeListRecycler.setAdapter(recipeListAdapter);
+
+
             //bundle.putParcelableArrayList("recipes", (ArrayList<? extends Parcelable>) recipeLists);
         }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("wholeArray", (ArrayList<? extends Parcelable>) recipeLists);
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //bind.unbind();
     }
 }

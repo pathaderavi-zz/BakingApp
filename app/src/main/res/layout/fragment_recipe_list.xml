@@ -6,16 +6,11 @@
     tools:context="layout.RecipeListFragment"
     android:layout_gravity="center">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipeListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginLeft="20dp"
-
         android:orientation="horizontal" />
 
 

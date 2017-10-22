@@ -1,5 +1,6 @@
 package com.example.ravikiranpathade.bakingapp.utils;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
@@ -115,11 +116,7 @@ public class QueryUtils {
             return null;
         }
 
-
         try{
-
-
-           //
 
             JSONArray baseArray = new JSONArray(json);
 
