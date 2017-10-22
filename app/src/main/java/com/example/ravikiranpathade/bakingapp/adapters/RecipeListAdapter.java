@@ -32,25 +32,18 @@ import butterknife.ButterKnife;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
 
 
-    RecipeList recipeList;
-    Intent intent;
-    Context mContext;
     Context mHolderContext;
     Context context;
-    TextView recipeListButton1;
-
-
-
-    public interface RecipeOnClickListener {
-        void onClick(String id);
-    }
-
-    private RecipeOnClickListener recipeOnClickListener;
+    //private RecipeOnClickListener recipeOnClickListener;
     public List<RecipeList> mRecipeList;
 
-    public void setRecipeOnClickListener(RecipeOnClickListener rListener) {
-        recipeOnClickListener = rListener;
-    }
+//    public interface RecipeOnClickListener {
+//        void onClick(String id);
+//    }
+//
+//    public void setRecipeOnClickListener(RecipeOnClickListener rListener) {
+//        recipeOnClickListener = rListener;
+//    }
 
     public RecipeListAdapter(List<RecipeList> rDetails) {
         mRecipeList = rDetails;
@@ -60,7 +53,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public RecipeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layourId = R.layout.recipe_list_item;
-         context = parent.getContext();
+        context = parent.getContext();
         //recipeListButton1 = (TextView) parent.findViewById(R.id.recipeListButton);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         boolean shouldAttachImmediately = false;
@@ -90,7 +83,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     }
 
     class RecipeListViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.recipeListButton) Button mRecipeListButton;
+        @BindView(R.id.recipeListButton)
+        Button mRecipeListButton;
         //@BindView(R.id.testText)
         //TextView mRecipeListButton;
 
@@ -98,8 +92,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public RecipeListViewHolder(View itemView) {
             super(itemView);
             mHolderContext = itemView.getContext();
-            ButterKnife.bind(this,itemView);
-
+            ButterKnife.bind(this, itemView);
 
 
         }
@@ -117,7 +110,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                     Intent newIntent = new Intent(context, RecipeStepsActivity.class);
 
                     newIntent.putParcelableArrayListExtra("check", (ArrayList<? extends Parcelable>) mRecipeList);
-                    newIntent.putExtra("id",getAdapterPosition());
+                    newIntent.putExtra("id", getAdapterPosition());
                     context.startActivity(newIntent);
 
                 }

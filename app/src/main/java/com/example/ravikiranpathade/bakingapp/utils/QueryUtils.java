@@ -109,8 +109,8 @@ public class QueryUtils {
 
     public static List<RecipeList> extractRecipes(String json){
         List<RecipeList> recipeListList = new ArrayList<>();
-        List<Ingredients> ingredientsList = new ArrayList<>();
-        List<StepForRecipe> stepForRecipeList = new ArrayList<>();
+        List<Ingredients> ingredientsList =null;
+        List<StepForRecipe> stepForRecipeList=null;
 
         if(json==null ||json.isEmpty()){
             return null;
@@ -123,27 +123,34 @@ public class QueryUtils {
             //Done Convert JSONArray -- Error Here
 
 
-            for(int i = 0 ;i < baseArray.length() ; i++){
-
+            for(int i = 0 ; i < baseArray.length() ; i++){
+                ingredientsList = new ArrayList<>();
+                stepForRecipeList = new ArrayList<>();
                 JSONObject baseObject = baseArray.getJSONObject(i);
                // Log.d("Check",sample.toString());
                 String id = baseObject.getString("id");
                 String name = baseObject.getString("name");
 
                 JSONArray baseArrayIngredients = baseObject.getJSONArray("ingredients");
+                //Log.d("Base Ing",baseArrayIngredients.toString());
                 for(int j = 0 ;j < baseArrayIngredients.length() ; j++){
+
                     JSONObject current = baseArrayIngredients.getJSONObject(j);
+
                     int quantity = current.getInt("quantity");
                     String measure = current.getString("measure");
                     String ingredient = current.getString("ingredient");
-                    Log.d(measure,ingredient);
+
                     ingredientsList.add(new Ingredients(quantity,measure,ingredient));
                     //Log.d(quantity+" "+measure,ingredient);
                 }
 
                 JSONArray baseArraySteps = baseObject.getJSONArray("steps");
+                Log.d("Base Steps",baseArraySteps.toString());
                 for(int j = 0 ;j < baseArraySteps.length() ; j++){
+
                     JSONObject current = baseArraySteps.getJSONObject(j);
+                    //Log.d("Base Ing Insiede",current.toString());
                     int id_step = current.getInt("id");
                     String shortDescription = current.getString("shortDescription");
                     String description = current.getString("description");
@@ -153,9 +160,14 @@ public class QueryUtils {
                     //Log.d(quantity+" "+measure,ingredient);
                 }
                 int servings = baseObject.getInt("servings");
-
+//                if(ingredientsList!=null && stepForRecipeList!=null) {
+//                    Log.d("Check Before" + String.valueOf(ingredientsList.size()), String.valueOf(stepForRecipeList.size()));
+//                }
                 recipeListList.add(new RecipeList(id,name,ingredientsList,stepForRecipeList,servings));
 
+
+
+                //Log.d("Check After"+String.valueOf(ingredientsList.size()),String.valueOf(recipeListList.get(i).getIngredients().size()));
             }
 
 
@@ -163,8 +175,7 @@ public class QueryUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
+        
         return recipeListList;
     }
 
