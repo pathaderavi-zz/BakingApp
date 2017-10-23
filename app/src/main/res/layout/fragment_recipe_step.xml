@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <Button
+    <!--<Button
         android:id="@+id/ingredientsButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -15,13 +15,13 @@
         android:background="#DFA785"
         android:layout_marginTop="10dp"
         style="@style/TextAppearance.AppCompat.Widget.Button"
-        />
+        />-->
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/stepsListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:orientation="horizontal" />
+        android:orientation="vertical" />
     </LinearLayout>
 </FrameLayout>

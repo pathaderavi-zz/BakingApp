@@ -47,6 +47,8 @@ public class RecipeListFragment extends Fragment {
     Bundle bundle;
     boolean tablet;
     Unbinder bind;
+
+
     public RecipeListFragment() {
         // Required empty public constructor
     }

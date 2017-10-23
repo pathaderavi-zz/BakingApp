@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import layout.IngredientsFragment;
 import layout.RecipeStepFragment;
 
 public class RecipeStepsActivity extends AppCompatActivity implements RecipeStepFragment.OnStepClickListener{
@@ -33,6 +34,9 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
     @Override
     public void onStepSelected(int position) {
-
+        if(position==0){
+            Fragment IngredientsFragment = new IngredientsFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.stepsFragmentContainer,IngredientsFragment).commit();
+        }
     }
 }

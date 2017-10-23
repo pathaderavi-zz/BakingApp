@@ -2,10 +2,12 @@ package com.example.ravikiranpathade.bakingapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.ravikiranpathade.bakingapp.R;
 import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
@@ -21,12 +23,16 @@ import butterknife.ButterKnife;
  */
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
-    
+
     List<StepForRecipe> stepForRecipe;
+
     Context context;
+
+
 
     public RecipeStepsAdapter(List<StepForRecipe> recipeSteps) {
         stepForRecipe = recipeSteps;
+
     }
 
 
@@ -34,16 +40,22 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public RecipeStepsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = R.layout.steps_list_item;
         context = parent.getContext();
+
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         boolean shouldAttach = false;
         View view = layoutInflater.inflate(layoutId,parent,shouldAttach);
+        ButterKnife.bind(this,view);
+
         RecipeStepsViewHolder stepsViewHolder = new RecipeStepsViewHolder(view);
+
         return stepsViewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
-        holder.bind(position);
+
+                holder.bind(position);
+
     }
 
     @Override
@@ -54,23 +66,36 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         stepForRecipe = steps;
         notifyDataSetChanged();
     }
+    public List<StepForRecipe> getDataRecipes(){
+        return stepForRecipe;
+    }
 
     class RecipeStepsViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.stepsListButton) Button stepsListButton;
 
         Context mHolderContext;
 
-        @BindView(R.id.stepsListButton) Button stepsListButton;
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
             mHolderContext =itemView.getContext();
             ButterKnife.bind(this,itemView);
-        }
 
-        public void bind(int position){
-
-            stepsListButton.setText(stepForRecipe.get(position).getShortDesc());
 
         }
+
+        public void bind(final int position){
+            if(position==0){
+
+                stepsListButton.setText("Check All the Ingredients");
+
+
+            }else {
+
+                stepsListButton.setText(getDataRecipes().get(position-1).getShortDesc());
+            }
+
+        }
+
     }
 }
