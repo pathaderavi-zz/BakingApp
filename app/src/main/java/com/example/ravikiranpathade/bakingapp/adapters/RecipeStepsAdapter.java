@@ -28,10 +28,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     Context context;
 
+    //TODO CLICKLISTENER
+    public interface RecipeStepAdapterOnClick{
+        void onClick(int position);
+    }
+    public RecipeStepAdapterOnClick mClickHandler;
 
-
-    public RecipeStepsAdapter(List<StepForRecipe> recipeSteps) {
+    public RecipeStepsAdapter(List<StepForRecipe> recipeSteps, Context mContext, RecipeStepAdapterOnClick mOnClick) {
         stepForRecipe = recipeSteps;
+        context = mContext;
+        mClickHandler = mOnClick;
 
     }
 
@@ -43,8 +49,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         boolean shouldAttach = false;
-        View view = layoutInflater.inflate(layoutId,parent,shouldAttach);
-        ButterKnife.bind(this,view);
+        View view = layoutInflater.inflate(layoutId, parent, shouldAttach);
+        ButterKnife.bind(this, view);
 
         RecipeStepsViewHolder stepsViewHolder = new RecipeStepsViewHolder(view);
 
@@ -54,7 +60,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @Override
     public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
 
-                holder.bind(position);
+        holder.bind(position);
 
     }
 
@@ -62,40 +68,48 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public int getItemCount() {
         return stepForRecipe.size();
     }
-    public void setData(List<StepForRecipe> steps){
+
+    public void setData(List<StepForRecipe> steps) {
         stepForRecipe = steps;
         notifyDataSetChanged();
     }
-    public List<StepForRecipe> getDataRecipes(){
+
+    public List<StepForRecipe> getDataRecipes() {
         return stepForRecipe;
     }
 
-    class RecipeStepsViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.stepsListButton) Button stepsListButton;
+    class RecipeStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.stepsListButton)
+        Button stepsListButton;
 
         Context mHolderContext;
 
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
-            mHolderContext =itemView.getContext();
-            ButterKnife.bind(this,itemView);
+            mHolderContext = itemView.getContext();
+            ButterKnife.bind(this, itemView);
 
 
         }
 
-        public void bind(final int position){
-            if(position==0){
+        public void bind(final int position) {
+            if (position == 0) {
 
                 stepsListButton.setText("Check All the Ingredients");
 
 
-            }else {
+            } else {
 
-                stepsListButton.setText(getDataRecipes().get(position-1).getShortDesc());
+                stepsListButton.setText(getDataRecipes().get(position - 1).getShortDesc());
             }
 
         }
-
+        //TODO CLICKLISTENER
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            mClickHandler.onClick(position);
+        }
     }
 }

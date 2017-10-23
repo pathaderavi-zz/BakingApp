@@ -1,6 +1,7 @@
 package layout;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecipeStepFragment extends Fragment {
+public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.RecipeStepAdapterOnClick{
 //    @BindView(R.id.ingredientsButton)
 //    Button ingredientsButton;
     LinearLayoutManager layoutManager;
@@ -40,19 +41,20 @@ public class RecipeStepFragment extends Fragment {
     public RecipeStepFragment() {
         // Required empty public constructor
     }
-
+    //TODO FROM HERE--
     @Override
-    public void onAttachFragment(Fragment childFragment) {
-        super.onAttachFragment(childFragment);
-        try {
-            clickListener = (OnStepClickListener) getContext();
-        }catch (Exception e){e.printStackTrace();}
+    public void onClick(int position) {
+        clickListener.onStepSelected(position);
     }
 
+    OnStepClickListener clickListener;
     public interface OnStepClickListener{
         void onStepSelected(int position);
     }
-    OnStepClickListener clickListener;
+
+    //TODO --TILL HERE
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,8 +72,8 @@ public class RecipeStepFragment extends Fragment {
         ArrayList<RecipeList> check  = getActivity().getIntent().getParcelableArrayListExtra("check");
         Integer id  = getActivity().getIntent().getIntExtra("id",0);
         recipeSteps = check.get(id).getSteps();
-        adapter = new RecipeStepsAdapter(recipeSteps);
-        
+        adapter = new RecipeStepsAdapter(recipeSteps,getContext(),this);
+
         stepsRecycler.setAdapter(adapter);
         //Done Set text of the ingredients button
 //        ingredientsButton.setText("See all"+String.valueOf(check.get(id).getSteps().size())+" ingredients");
@@ -79,5 +81,17 @@ public class RecipeStepFragment extends Fragment {
 
         return view;
     }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            clickListener = (OnStepClickListener) context;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
