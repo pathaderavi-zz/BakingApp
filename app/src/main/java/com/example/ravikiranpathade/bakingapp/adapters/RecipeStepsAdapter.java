@@ -25,6 +25,10 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     List<StepForRecipe> stepForRecipe;
     Context context;
 
+    public RecipeStepsAdapter(List<StepForRecipe> recipeSteps) {
+        stepForRecipe = recipeSteps;
+    }
+
 
     @Override
     public RecipeStepsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,11 +64,12 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
             mHolderContext =itemView.getContext();
-            ButterKnife.bind(mHolderContext,itemView);
+            ButterKnife.bind(this,itemView);
         }
 
         public void bind(int position){
-            //TODO Button Settext
+
+            stepsListButton.setText(stepForRecipe.get(position).getShortDesc());
 
         }
     }
