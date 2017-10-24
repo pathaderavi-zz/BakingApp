@@ -100,6 +100,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             //ingredients.setText("Check All the Ingredients");
 
             stepsListButton.setText("All Ingredients");
+            stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
             }else {
 
                  stepsListButton.setText(getDataRecipes().get(position-1).getShortDesc());

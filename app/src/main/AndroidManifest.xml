@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".RecipeDetailSteps"
-            android:label="@string/title_activity_recipe_detail_steps"
+            android:label="Recipe Steps"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RecipeStepsActivity"></activity>
     </application>
