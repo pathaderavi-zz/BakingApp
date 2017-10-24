@@ -29,9 +29,10 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     Context context;
 
     //TODO CLICKLISTENER
-    public interface RecipeStepAdapterOnClick{
+    public interface RecipeStepAdapterOnClick {
         void onClick(int position);
     }
+
     public RecipeStepAdapterOnClick mClickHandler;
 
     public RecipeStepsAdapter(List<StepForRecipe> recipeSteps, Context mContext, RecipeStepAdapterOnClick mOnClick) {
@@ -90,7 +91,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             mHolderContext = itemView.getContext();
             ButterKnife.bind(this, itemView);
 
-
+            stepsListButton.setOnClickListener(this);
         }
 
         public void bind(final int position) {
@@ -105,11 +106,14 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             }
 
         }
+
         //TODO CLICKLISTENER
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             mClickHandler.onClick(position);
+            //Toast.makeText(context,"From Adapter",Toast.LENGTH_SHORT).show();
+            Log.d("Here"," is");
         }
     }
 }

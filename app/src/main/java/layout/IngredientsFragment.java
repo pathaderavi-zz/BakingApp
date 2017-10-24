@@ -34,8 +34,9 @@ public class IngredientsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         allIngredients = new ArrayList<>();
-
-        Log.d("Ingredients Bundle",savedInstanceState.toString());
+        if(savedInstanceState!=null) {
+            Log.d("Ingredients Bundle", savedInstanceState.toString());
+        }
         View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
 
         ButterKnife.bind(this,view);

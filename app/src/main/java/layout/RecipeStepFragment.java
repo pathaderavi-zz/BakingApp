@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -28,8 +29,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.RecipeStepAdapterOnClick{
-//    @BindView(R.id.ingredientsButton)
+public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.RecipeStepAdapterOnClick {
+    //    @BindView(R.id.ingredientsButton)
 //    Button ingredientsButton;
     LinearLayoutManager layoutManager;
     List<StepForRecipe> recipeSteps;
@@ -41,57 +42,57 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
     public RecipeStepFragment() {
         // Required empty public constructor
     }
+
     //TODO FROM HERE--
     @Override
     public void onClick(int position) {
         clickListener.onStepSelected(position);
+        //Toast.makeText(context,"From Fragment",Toast.LENGTH_SHORT).show();
     }
 
     OnStepClickListener clickListener;
-    public interface OnStepClickListener{
+
+    public interface OnStepClickListener {
         void onStepSelected(int position);
+
     }
 
     //TODO --TILL HERE
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
-        layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         stepsRecycler.setLayoutManager(layoutManager);
         stepsRecycler.setHasFixedSize(true);
         recipeSteps = new ArrayList<>();
 
         // Inflate the layout for this fragment
         Intent i = new Intent();
-        ArrayList<RecipeList> check  = getActivity().getIntent().getParcelableArrayListExtra("check");
-        Integer id  = getActivity().getIntent().getIntExtra("id",0);
+        ArrayList<RecipeList> check = getActivity().getIntent().getParcelableArrayListExtra("check");
+        Integer id = getActivity().getIntent().getIntExtra("id", 0);
         recipeSteps = check.get(id).getSteps();
-        adapter = new RecipeStepsAdapter(recipeSteps,getContext(),this);
+        adapter = new RecipeStepsAdapter(recipeSteps, getContext(), this);
 
         stepsRecycler.setAdapter(adapter);
-        //Done Set text of the ingredients button
-//        ingredientsButton.setText("See all"+String.valueOf(check.get(id).getSteps().size())+" ingredients");
 
 
         return view;
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             clickListener = (OnStepClickListener) context;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 
 }
