@@ -30,8 +30,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.RecipeStepAdapterOnClick {
-    //    @BindView(R.id.ingredientsButton)
-//    Button ingredientsButton;
+
     LinearLayoutManager layoutManager;
     List<StepForRecipe> recipeSteps;
     @BindView(R.id.stepsListRecycler)
@@ -69,12 +68,13 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         stepsRecycler.setLayoutManager(layoutManager);
         stepsRecycler.setHasFixedSize(true);
-        recipeSteps = new ArrayList<>();
 
+        recipeSteps = new ArrayList<>();
         // Inflate the layout for this fragment
         Intent i = new Intent();
         ArrayList<RecipeList> check = getActivity().getIntent().getParcelableArrayListExtra("check");
         Integer id = getActivity().getIntent().getIntExtra("id", 0);
+
         recipeSteps = check.get(id).getSteps();
         adapter = new RecipeStepsAdapter(recipeSteps, getContext(), this);
 

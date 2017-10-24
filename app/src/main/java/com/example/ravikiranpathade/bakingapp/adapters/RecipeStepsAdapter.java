@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
     List<StepForRecipe> stepForRecipe;
-    @BindView(R.id.ingredientsButton) Button ingredients;
+
     Context context;
 
     //TODO CLICKLISTENER

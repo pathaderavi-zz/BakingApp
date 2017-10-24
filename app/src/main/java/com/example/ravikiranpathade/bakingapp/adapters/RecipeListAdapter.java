@@ -54,7 +54,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public RecipeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layourId = R.layout.recipe_list_item;
         context = parent.getContext();
-        //recipeListButton1 = (TextView) parent.findViewById(R.id.recipeListButton);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         boolean shouldAttachImmediately = false;
 
@@ -67,7 +66,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public void onBindViewHolder(final RecipeListViewHolder holder, int position) {
 
-        //mRecipeListButton.setText("Check Text ");
+
         holder.bind(position);
     }
 
@@ -85,8 +84,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     class RecipeListViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.recipeListButton)
         Button mRecipeListButton;
-        //@BindView(R.id.testText)
-        //TextView mRecipeListButton;
+
 
 
         public RecipeListViewHolder(View itemView) {
@@ -104,8 +102,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mRecipeListButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    //Log.d("Button Clicked",mRecipeList.get(getAdapterPosition()).getRecipeName());
 
                     Intent newIntent = new Intent(context, RecipeStepsActivity.class);
 
