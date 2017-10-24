@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
     List<StepForRecipe> stepForRecipe;
-
+    @BindView(R.id.ingredientsButton) Button ingredients;
     Context context;
 
     //TODO CLICKLISTENER
@@ -67,7 +67,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public int getItemCount() {
-        return stepForRecipe.size();
+        return stepForRecipe.size()+1;
     }
 
     public void setData(List<StepForRecipe> steps) {
@@ -95,25 +95,24 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         }
 
         public void bind(final int position) {
-            if (position == 0) {
+             if (position == 0) {
 
-                stepsListButton.setText("Check All the Ingredients");
+            //ingredients.setText("Check All the Ingredients");
 
+            stepsListButton.setText("All Ingredients");
+            }else {
 
-            } else {
-
-                stepsListButton.setText(getDataRecipes().get(position - 1).getShortDesc());
-            }
+                 stepsListButton.setText(getDataRecipes().get(position-1).getShortDesc());
+             }
 
         }
 
-        //TODO CLICKLISTENER
+        //Done CLICKLISTENER
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             mClickHandler.onClick(position);
-            //Toast.makeText(context,"From Adapter",Toast.LENGTH_SHORT).show();
-            Log.d("Here"," is");
+
         }
     }
 }
