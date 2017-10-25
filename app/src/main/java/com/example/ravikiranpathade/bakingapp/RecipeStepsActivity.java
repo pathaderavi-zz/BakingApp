@@ -16,6 +16,7 @@ import java.util.List;
 
 import layout.IngredientsFragment;
 import layout.RecipeStepFragment;
+import layout.StepDetailFragment;
 
 public class RecipeStepsActivity extends AppCompatActivity implements RecipeStepFragment.OnStepClickListener {
 
@@ -43,13 +44,13 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
         }
         getSupportActionBar().setTitle("Recipe Steps");
 
-        //Log.d("Fragment Status",String.valueOf(stepFragment==null)+" "+String.valueOf(IngredientsFragment==null));
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("Entered ","onSaveInstance");
+        Log.d("Entered ", "onSaveInstance");
         fragmentManager.putFragment(outState, "frag_steps", stepFragment);
 
 
@@ -66,10 +67,15 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
                     .addToBackStack(null).commit();
 
         } else {
-            Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id_Step",position-1);
+            Fragment stepDetailFrag = new StepDetailFragment();
+            stepDetailFrag.setArguments(bundle);
+            fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, stepDetailFrag)
+                    .addToBackStack(null).commit();
         }
 
-        Log.d("Pop Stack", String.valueOf(fragmentManager.getBackStackEntryCount()));
     }
 
     @Override
@@ -80,8 +86,8 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
         } else {
             super.onBackPressed();
             finish();
-       }
+        }
 
-        Log.d("Pop Stack", String.valueOf(fragmentManager.getBackStackEntryCount()));
+
     }
 }
