@@ -3,6 +3,8 @@ package layout;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.ravikiranpathade.bakingapp.R;
+import com.example.ravikiranpathade.bakingapp.adapters.StepDetailAdapter;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
 import com.example.ravikiranpathade.bakingapp.singleList.StepForRecipe;
 
@@ -26,17 +29,20 @@ import butterknife.ButterKnife;
 public class StepDetailFragment extends Fragment {
 
     List<StepForRecipe> recipeStepDetails;
-    @BindView(R.id.step_detail_desc)
-    TextView stepDetail;
+//    @BindView(R.id.step_detail_desc)
+//    TextView stepDetail;
     @BindView(R.id.previous)
     Button previous;
     @BindView(R.id.next)
     Button next;
     Integer id_s;
     int step_id;
-
+    @BindView(R.id.stepDetailRecycler)
+    RecyclerView stepDetailsRecycler;
+    StepDetailAdapter adapter;
+    LinearLayoutManager layoutManager;
     public StepDetailFragment() {
-        // Required empty public constructor
+        
     }
 
     @Override
@@ -44,82 +50,94 @@ public class StepDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         ArrayList<RecipeList> check = getActivity().getIntent().getParcelableArrayListExtra("check");
 
-        if (id_s == null) {
-            id_s = getActivity().getIntent().getIntExtra("id", 0);
-        } else {
+        id_s = getActivity().getIntent().getIntExtra("id", 0);
 
-        }
 
         recipeStepDetails = check.get(id_s).getSteps();
 
         View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
+        layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+
         ButterKnife.bind(this, view);
+        stepDetailsRecycler.setLayoutManager(layoutManager);
+        stepDetailsRecycler.setHasFixedSize(true);
 
         step_id = getArguments().getInt("id_Step");
 
-        Log.d("Check Previous Next", recipeStepDetails.get(step_id).getShortDesc());
+        //TODO ----------------------- Might have to change clickListener
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                step_id = step_id - 1;
+                if (step_id > 0) {
+                    previous.setVisibility(View.VISIBLE);
 
-            previous.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    step_id = step_id - 1;
-                    if (step_id > 0) {
-                        previous.setVisibility(View.VISIBLE);
-                        stepDetail.setText(recipeStepDetails.get(step_id).getDesc());
-                        Log.d("Previous Button", String.valueOf(step_id));
-                    } else {
 
-                        previous.setVisibility(View.GONE);
-                    }
-                    if (step_id < recipeStepDetails.size() - 1) {
-                        stepDetail.setText(recipeStepDetails.get(step_id).getDesc());
-                        next.setVisibility(View.VISIBLE);
-                    } else {
-                        next.setVisibility(View.GONE);
-                    }
+                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
 
+                    stepDetailsRecycler.setAdapter(adapter);
+
+                } else {
+
+                    previous.setVisibility(View.GONE);
+                }
+                if (step_id < recipeStepDetails.size() - 1) {
+
+                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                    stepDetailsRecycler.setAdapter(adapter);
+
+
+
+                    next.setVisibility(View.VISIBLE);
+                } else {
+                    next.setVisibility(View.GONE);
                 }
 
-            });
+            }
 
-        //Log.d("Button ID "+String.valueOf(step_id),String.valueOf(recipeStepDetails.size()));
+        });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                step_id = step_id + 1;
 
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    step_id = step_id + 1;
+                if (step_id < recipeStepDetails.size() - 1) {
+                    next.setVisibility(View.VISIBLE);
 
-                    if (step_id < recipeStepDetails.size()-1) {
-                        next.setVisibility(View.VISIBLE);
-                        stepDetail.setText(recipeStepDetails.get(step_id).getDesc());
-                        //Log.d("Next Button", String.valueOf(step_id));
-                    } else {
-                        next.setVisibility(View.GONE);
-                    }
-                    if (step_id > 0) {
-                        stepDetail.setText(recipeStepDetails.get(step_id).getDesc());
-                        previous.setVisibility(View.VISIBLE);
-                    } else {
-                        previous.setVisibility(View.GONE);
-                    }
+                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
 
+                    stepDetailsRecycler.setAdapter(adapter);
+
+                } else {
+                    next.setVisibility(View.GONE);
+                }
+                if (step_id > 0) {
+                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                    stepDetailsRecycler.setAdapter(adapter);
+
+                    previous.setVisibility(View.VISIBLE);
+                } else {
+                    previous.setVisibility(View.GONE);
                 }
 
-            });
+            }
+
+        });
 
         if (!(step_id > 0)) {
             previous.setVisibility(View.GONE);
 
         }
-        if(!(step_id <recipeStepDetails.size()-1)){
-            //else {
-                next.setVisibility(View.GONE);
+        if (!(step_id < recipeStepDetails.size() - 1)) {
+
+            next.setVisibility(View.GONE);
 
         }
 
-        //Log.d("Check Previous Next",recipeStepDetails.get(step_id).getShortDesc());
-        stepDetail.setText(recipeStepDetails.get(step_id).getDesc());
-        // Inflate the layout for this fragment
+        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+        stepDetailsRecycler.setAdapter(adapter);
         return view;
     }
 

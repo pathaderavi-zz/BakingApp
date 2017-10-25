@@ -4,62 +4,26 @@
     android:layout_height="match_parent"
     tools:context="layout.StepDetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/db1_root"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/stepDetailRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
-        <TextView
-            android:id="@+id/step_detail_desc"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:text="cow"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="0.02"
-            android:gravity="center|bottom"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button3"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-
-                android:text="Previous Step" />
-
-            <Button
-                android:id="@+id/button2"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|bottom"
-                android:text="Next Step" />
-        </LinearLayout>
-    </LinearLayout>
-    -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/db1_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/step_detail_desc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:gravity="center"
             android:text="cow"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
         <LinearLayout
             android:layout_width="match_parent"

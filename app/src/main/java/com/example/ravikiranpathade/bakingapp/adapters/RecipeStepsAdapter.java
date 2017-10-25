@@ -28,7 +28,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     Context context;
 
-    //TODO CLICKLISTENER
+
     public interface RecipeStepAdapterOnClick {
         void onClick(int position);
     }
@@ -67,7 +67,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public int getItemCount() {
-        return stepForRecipe.size()+1;
+        return stepForRecipe.size() + 1;
     }
 
     public void setData(List<StepForRecipe> steps) {
@@ -95,17 +95,23 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         }
 
         public void bind(final int position) {
-             if (position == 0) {
+            if (position == 0) {
 
-            //ingredients.setText("Check All the Ingredients");
+                //ingredients.setText("Check All the Ingredients");
 
-            stepsListButton.setText("All Ingredients");
-            stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
-            }else {
-                 //TODO Change color
-                 //stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
-                 stepsListButton.setText(String.valueOf(position)+". "+getDataRecipes().get(position-1).getShortDesc());
-             }
+                stepsListButton.setText("All Ingredients");
+                stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
+            } else {
+                //TODO Change color
+                //stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
+                if (position == 1) {
+                    stepsListButton.setText(getDataRecipes().get(position - 1).getShortDesc());
+                     } else {
+                    stepsListButton.setText(String.valueOf(position-1) + ". " + getDataRecipes().get(position - 1).getShortDesc());
+
+
+                }
+            }
 
         }
 
