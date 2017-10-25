@@ -42,6 +42,8 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
         } else {
             stepFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_steps");
         }
+        //TODO Change everytime the fragment Changes
+
         getSupportActionBar().setTitle("Recipe Steps");
 
 
@@ -85,6 +87,8 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
+
+            //TODO Check removing finish()
             finish();
         }
 
