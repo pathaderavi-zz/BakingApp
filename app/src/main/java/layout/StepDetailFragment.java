@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class StepDetailFragment extends Fragment {
 
     List<StepForRecipe> recipeStepDetails;
-//    @BindView(R.id.step_detail_desc)
+    //    @BindView(R.id.step_detail_desc)
 //    TextView stepDetail;
     @BindView(R.id.previous)
     Button previous;
@@ -39,10 +39,16 @@ public class StepDetailFragment extends Fragment {
     int step_id;
     @BindView(R.id.stepDetailRecycler)
     RecyclerView stepDetailsRecycler;
+
+    public StepDetailAdapter getAdapter() {
+        return adapter;
+    }
+
     StepDetailAdapter adapter;
     LinearLayoutManager layoutManager;
+
     public StepDetailFragment() {
-        
+
     }
 
     @Override
@@ -56,7 +62,7 @@ public class StepDetailFragment extends Fragment {
         recipeStepDetails = check.get(id_s).getSteps();
 
         View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
-        layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         ButterKnife.bind(this, view);
         stepDetailsRecycler.setLayoutManager(layoutManager);
@@ -68,6 +74,11 @@ public class StepDetailFragment extends Fragment {
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (adapter.getExoplayer != null) {
+                    Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
+                    adapter.getExoplayer.stop();
+                    adapter.getExoplayer.release();
+                }
                 step_id = step_id - 1;
                 if (step_id > 0) {
                     previous.setVisibility(View.VISIBLE);
@@ -88,7 +99,6 @@ public class StepDetailFragment extends Fragment {
                     stepDetailsRecycler.setAdapter(adapter);
 
 
-
                     next.setVisibility(View.VISIBLE);
                 } else {
                     next.setVisibility(View.GONE);
@@ -100,6 +110,11 @@ public class StepDetailFragment extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (adapter.getExoplayer != null) {
+                    Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
+                    adapter.getExoplayer.stop();
+                    adapter.getExoplayer.release();
+                }
                 step_id = step_id + 1;
 
                 if (step_id < recipeStepDetails.size() - 1) {

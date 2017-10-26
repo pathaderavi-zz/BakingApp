@@ -25,6 +25,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
     Bundle bundle = new Bundle();
     FragmentManager fragmentManager;
+    StepDetailFragment stepDetailFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,10 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
         Intent i = new Intent();
         ArrayList<RecipeList> check = getIntent().getParcelableArrayListExtra("check");
         Integer id_s = getIntent().getIntExtra("id", 0);
-
+        fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             stepFragment = new RecipeStepFragment();
-            fragmentManager = getSupportFragmentManager();
+
             fragmentManager.beginTransaction().add(R.id.stepsFragmentContainer, stepFragment).commit();
         } else {
             stepFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_steps");
@@ -53,10 +54,11 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d("Entered ", "onSaveInstance");
-        fragmentManager.putFragment(outState, "frag_steps", stepFragment);
+        fragmentManager.putFragment(outState, "frag_steps", fragmentManager.findFragmentById(R.id.stepsFragmentContainer));
 
 
     }
+
 
     //TODO onCLICK METHOD TO WORK
     @Override
@@ -72,7 +74,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
             //Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
             Bundle bundle = new Bundle();
             bundle.putInt("id_Step",position-1);
-            Fragment stepDetailFrag = new StepDetailFragment();
+            stepDetailFrag = new StepDetailFragment();
             stepDetailFrag.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, stepDetailFrag)
                     .addToBackStack(null).commit();
@@ -82,7 +84,10 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
     @Override
     public void onBackPressed() {
-
+        if(stepDetailFrag.getAdapter().getExoplayer!=null){
+            stepDetailFrag.getAdapter().getExoplayer.stop();
+            stepDetailFrag.getAdapter().getExoplayer.release();
+        }
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else {

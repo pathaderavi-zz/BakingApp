@@ -55,7 +55,9 @@
                 android:layout_weight="0.51"
                 android:background="@color/colorPrimary"
                 android:text="Next Step"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+
+               />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
