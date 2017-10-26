@@ -26,7 +26,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
     Bundle bundle = new Bundle();
     FragmentManager fragmentManager;
     StepDetailFragment stepDetailFrag;
-
+    long seekTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,11 +41,15 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
             fragmentManager.beginTransaction().add(R.id.stepsFragmentContainer, stepFragment).commit();
         } else {
-            stepFragment = getSupportFragmentManager().getFragment(savedInstanceState, "frag_steps");
+            //TODO
+            fragmentManager.getFragment(savedInstanceState, "frag_steps");
         }
         //TODO Change everytime the fragment Changes
 
         getSupportActionBar().setTitle("Recipe Steps");
+//        if(stepDetailFrag!=null && stepDetailFrag.getAdapter().getExoplayer!=null){
+//            stepDetailFrag.getAdapter().getExoplayer.seekTo(seekTime);
+//        }
 
 
     }
@@ -53,7 +57,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("Entered ", "onSaveInstance");
+
         fragmentManager.putFragment(outState, "frag_steps", fragmentManager.findFragmentById(R.id.stepsFragmentContainer));
 
 
@@ -84,7 +88,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
     @Override
     public void onBackPressed() {
-        if(stepDetailFrag.getAdapter().getExoplayer!=null){
+        if(stepDetailFrag!=null && stepDetailFrag.getAdapter().getExoplayer!=null){
             stepDetailFrag.getAdapter().getExoplayer.stop();
             stepDetailFrag.getAdapter().getExoplayer.release();
         }

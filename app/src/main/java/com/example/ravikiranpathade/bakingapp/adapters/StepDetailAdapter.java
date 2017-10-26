@@ -40,6 +40,11 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
     Context context;
     public SimpleExoPlayer getExoplayer;
 
+    public void setSeekTimePosition(long seekTimePosition) {
+        this.seekTimePosition = seekTimePosition;
+    }
+
+    private long seekTimePosition;
 
 
     public StepDetailAdapter(StepForRecipe details) {
@@ -103,6 +108,9 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
             if (allDetails.getVideoUrl().length()>10) {
                 //Log.d("Av At"+String.valueOf(position),allDetails.getVideoUrl());
                 initializePlayer(Uri.parse(allDetails.getVideoUrl()));
+                if(seekTimePosition>0){
+                    exoPlayer.seekTo(seekTimePosition);
+                }
 
             }else{
                 //Log.d("NA At"+String.valueOf(position),allDetails.getVideoUrl());

@@ -36,7 +36,7 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
     @BindView(R.id.stepsListRecycler)
     RecyclerView stepsRecycler;
     RecipeStepsAdapter adapter;
-
+    Bundle bundle;
 
     public RecipeStepFragment() {
         // Required empty public constructor
@@ -74,7 +74,19 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
         Intent i = new Intent();
         ArrayList<RecipeList> check = getActivity().getIntent().getParcelableArrayListExtra("check");
         Integer id = getActivity().getIntent().getIntExtra("id", 0);
-
+        if (bundle == null) {
+            bundle = new Bundle();
+        }
+        if (check != null) {
+            bundle.putParcelableArrayList("check", check);
+        } else {
+            check = bundle.getParcelableArrayList("check");
+        }
+        if (id != null) {
+            bundle.putInt("id", id);
+        } else {
+            id = bundle.getInt("id");
+        }
         recipeSteps = check.get(id).getSteps();
         adapter = new RecipeStepsAdapter(recipeSteps, getContext(), this);
 

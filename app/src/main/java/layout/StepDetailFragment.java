@@ -2,6 +2,7 @@ package layout;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,27 @@ public class StepDetailFragment extends Fragment {
     @BindView(R.id.stepDetailRecycler)
     RecyclerView stepDetailsRecycler;
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            step_id = savedInstanceState.getInt("step_id");
+
+
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("step_id", step_id);
+        if(getAdapter().getExoplayer!=null){
+            long time = getAdapter().getExoplayer.getCurrentPosition();
+            outState.putLong("seek_time_frag",time);
+        }
+
+    }
+
     public StepDetailAdapter getAdapter() {
         return adapter;
     }
@@ -68,7 +90,11 @@ public class StepDetailFragment extends Fragment {
         stepDetailsRecycler.setLayoutManager(layoutManager);
         stepDetailsRecycler.setHasFixedSize(true);
 
-        step_id = getArguments().getInt("id_Step");
+        if (savedInstanceState==null) {
+            step_id = getArguments().getInt("id_Step");
+        }else{
+            step_id = savedInstanceState.getInt("step_id");
+        }
 
         //TODO ----------------------- Might have to change clickListener
         previous.setOnClickListener(new View.OnClickListener() {
@@ -150,9 +176,13 @@ public class StepDetailFragment extends Fragment {
             next.setVisibility(View.GONE);
 
         }
-
+        Log.d("Check Adapter", String.valueOf(step_id));
         adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+        if(savedInstanceState!=null && (savedInstanceState.getLong("seek_time_frag")>0)){
+            adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
+        }
         stepDetailsRecycler.setAdapter(adapter);
+
         return view;
     }
 
