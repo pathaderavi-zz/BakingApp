@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ravikiranpathade.bakingapp.R;
@@ -40,6 +41,7 @@ public class StepDetailFragment extends Fragment {
     int step_id;
     @BindView(R.id.stepDetailRecycler)
     RecyclerView stepDetailsRecycler;
+    boolean landscape;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -55,9 +57,9 @@ public class StepDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("step_id", step_id);
-        if(getAdapter().getExoplayer!=null){
+        if (getAdapter().getExoplayer != null) {
             long time = getAdapter().getExoplayer.getCurrentPosition();
-            outState.putLong("seek_time_frag",time);
+            outState.putLong("seek_time_frag", time);
         }
 
     }
@@ -83,23 +85,26 @@ public class StepDetailFragment extends Fragment {
 
         recipeStepDetails = check.get(id_s).getSteps();
 
-        View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         ButterKnife.bind(this, view);
         stepDetailsRecycler.setLayoutManager(layoutManager);
         stepDetailsRecycler.setHasFixedSize(true);
 
-        if (savedInstanceState==null) {
+        if (savedInstanceState == null) {
             step_id = getArguments().getInt("id_Step");
-        }else{
+        } else {
             step_id = savedInstanceState.getInt("step_id");
         }
 
-        //TODO ----------------------- Might have to change clickListener
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
+                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+                    linearLayout.setVisibility(View.GONE);
+                }
                 if (adapter.getExoplayer != null) {
                     Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
                     adapter.getExoplayer.stop();
@@ -136,6 +141,10 @@ public class StepDetailFragment extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
+                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+                    linearLayout.setVisibility(View.GONE);
+                }
                 if (adapter.getExoplayer != null) {
                     Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
                     adapter.getExoplayer.stop();
@@ -176,10 +185,28 @@ public class StepDetailFragment extends Fragment {
             next.setVisibility(View.GONE);
 
         }
-        Log.d("Check Adapter", String.valueOf(step_id));
+
+
         adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-        if(savedInstanceState!=null && (savedInstanceState.getLong("seek_time_frag")>0)){
-            adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
+        if (view.findViewById(R.id.linearRecipeStepDetail) != null) {
+            if (recipeStepDetails.get(step_id).getVideoUrl().length() < 10) {
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
+           Log.d("Check Here","Button In");
+           //(recipeStepDetails.get(step_id).getVideoUrl().length() > 10) &&
+//            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+//            previous.setVisibility(View.GONE);
+//            next.setVisibility(View.GONE);
+        }
+
+
+        //Log.d("Landscape Status", String.valueOf(adapter.landscape));
+        if (savedInstanceState != null && (savedInstanceState.getLong("seek_time_frag") > 0)) {
+            adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag") - 1000);
         }
         stepDetailsRecycler.setAdapter(adapter);
 

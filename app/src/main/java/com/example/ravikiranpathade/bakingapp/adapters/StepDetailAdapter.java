@@ -40,6 +40,12 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
     Context context;
     public SimpleExoPlayer getExoplayer;
 
+    public boolean isLandscape() {
+        return landscape;
+    }
+
+    public boolean landscape;
+
     public void setSeekTimePosition(long seekTimePosition) {
         this.seekTimePosition = seekTimePosition;
     }
@@ -54,8 +60,10 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
 
     @Override
     public StepDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         int layoutId = R.layout.step_detail_item;
         context = parent.getContext();
+
         boolean shouldAttach = false;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(layoutId, parent, shouldAttach);
@@ -76,12 +84,14 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
 
     public class StepDetailViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.step_description)
+        // @BindView(R.id.step_description)
         TextView stepDescriptionItem;
         Context holderContext;
         public SimpleExoPlayer exoPlayer;
+
         public @BindView(R.id.exoPlayer)
         SimpleExoPlayerView playerView;
+
         public SimpleExoPlayer getExoPlayer() {
             return exoPlayer;
         }
@@ -89,8 +99,10 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
         public SimpleExoPlayerView getPlayerView() {
             return playerView;
         }
+
         public StepDetailViewHolder(View itemView) {
             super(itemView);
+            landscape = (itemView.findViewById(R.id.stepDetailItemLandscape) == null);
             holderContext = itemView.getContext();
 
             //
@@ -99,24 +111,34 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
         }
 
         public void bind(int position) {
+            if (landscape) {
+                Log.d("Entered Here ", "Landscape");
+                stepDescriptionItem = (TextView) itemView.findViewById(R.id.step_description);
+            }
+            Log.d("Check Landscape", String.valueOf(landscape));
             ButterKnife.bind(this, itemView);
 
             playerView.setDefaultArtwork(BitmapFactory.decodeResource
                     (context.getResources(), R.drawable.exo_controls_play));
-            Log.d("Video URL", "Check"+String.valueOf(exoPlayer==null));
+            Log.d("Video URL", "Check" + String.valueOf(exoPlayer == null));
 
-            if (allDetails.getVideoUrl().length()>10) {
+            if (allDetails.getVideoUrl().length() > 10) {
                 //Log.d("Av At"+String.valueOf(position),allDetails.getVideoUrl());
                 initializePlayer(Uri.parse(allDetails.getVideoUrl()));
-                if(seekTimePosition>0){
+                if (seekTimePosition > 0) {
                     exoPlayer.seekTo(seekTimePosition);
                 }
 
-            }else{
+            } else {
                 //Log.d("NA At"+String.valueOf(position),allDetails.getVideoUrl());
                 playerView.setVisibility(View.GONE);
+                TextView textView =(TextView) itemView.findViewById(R.id.step_description);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(allDetails.getDesc());
             }
-            stepDescriptionItem.setText(allDetails.getDesc());
+            if (stepDescriptionItem != null) {
+                stepDescriptionItem.setText(allDetails.getDesc());
+            }
             getExoplayer = exoPlayer;
         }
 
