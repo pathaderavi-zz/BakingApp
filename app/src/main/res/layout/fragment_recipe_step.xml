@@ -13,7 +13,7 @@
         android:id="@+id/stepsListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:focusable="true"
         android:orientation="vertical" />
     </LinearLayout>
 </FrameLayout>

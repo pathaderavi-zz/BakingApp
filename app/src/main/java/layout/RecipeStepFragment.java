@@ -35,6 +35,11 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
     List<StepForRecipe> recipeSteps;
     @BindView(R.id.stepsListRecycler)
     RecyclerView stepsRecycler;
+
+    public RecipeStepsAdapter getAdapter() {
+        return adapter;
+    }
+
     RecipeStepsAdapter adapter;
     Bundle bundle;
 
@@ -46,7 +51,9 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
     @Override
     public void onClick(int position) {
         clickListener.onStepSelected(position);
-        //Toast.makeText(context,"From Fragment",Toast.LENGTH_SHORT).show();
+        //stepsRecycler.setAdapter(adapter);
+
+       // Log.d("is child ",String.valueOf(v==null));
     }
 
     OnStepClickListener clickListener;
@@ -64,6 +71,7 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
         ButterKnife.bind(this, view);
+
 
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         stepsRecycler.setLayoutManager(layoutManager);
@@ -99,6 +107,7 @@ public class RecipeStepFragment extends Fragment implements RecipeStepsAdapter.R
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         try {
             clickListener = (OnStepClickListener) context;
         } catch (Exception e) {

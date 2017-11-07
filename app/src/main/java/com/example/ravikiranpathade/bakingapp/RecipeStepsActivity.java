@@ -27,80 +27,148 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
     FragmentManager fragmentManager;
     StepDetailFragment stepDetailFrag;
     long seekTime;
+    boolean tabletPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_recipe_steps);
-        Intent i = new Intent();
-        ArrayList<RecipeList> check = getIntent().getParcelableArrayListExtra("check");
-        Integer id_s = getIntent().getIntExtra("id", 0);
-        fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
-            stepFragment = new RecipeStepFragment();
+        if (findViewById(R.id.tablet_detail_activity) != null) {
+            tabletPane = true;
+            //TODO Implement Tablet fragments
+            Intent i = new Intent();
+            ArrayList<RecipeList> check = getIntent().getParcelableArrayListExtra("check");
+            Integer id_s = getIntent().getIntExtra("id", 0);
+            fragmentManager = getSupportFragmentManager();
+            if (savedInstanceState == null) {
+                stepFragment = new RecipeStepFragment();
 
-            fragmentManager.beginTransaction().add(R.id.stepsFragmentContainer, stepFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.steps_detail_tablet, new IngredientsFragment()).commit();
+            } else {
+                //TODO
+                fragmentManager.getFragment(savedInstanceState, "frag_steps");
+            }
+
         } else {
-            //TODO
-            fragmentManager.getFragment(savedInstanceState, "frag_steps");
-        }
-        //TODO Change everytime the fragment Changes
+            tabletPane = false;
+            Intent i = new Intent();
+            ArrayList<RecipeList> check = getIntent().getParcelableArrayListExtra("check");
+            Integer id_s = getIntent().getIntExtra("id", 0);
+            fragmentManager = getSupportFragmentManager();
+            if (savedInstanceState == null) {
+                stepFragment = new RecipeStepFragment();
 
-        getSupportActionBar().setTitle("Recipe Steps");
+                fragmentManager.beginTransaction().add(R.id.stepsFragmentContainer, stepFragment).commit();
+            } else {
+                //TODO
+                fragmentManager.getFragment(savedInstanceState, "frag_steps");
+            }
+            //TODO Change everytime the fragment Changes
+
+
 //        if(stepDetailFrag!=null && stepDetailFrag.getAdapter().getExoplayer!=null){
 //            stepDetailFrag.getAdapter().getExoplayer.seekTo(seekTime);
 //        }
-
-
+        }
+        getSupportActionBar().setTitle("Recipe Steps");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (!tabletPane) {
+            fragmentManager.putFragment(outState, "frag_steps", fragmentManager.findFragmentById(R.id.stepsFragmentContainer));
 
-        fragmentManager.putFragment(outState, "frag_steps", fragmentManager.findFragmentById(R.id.stepsFragmentContainer));
+        } else {
+            if (tabletPane) {
+                if (stepDetailFrag != null && stepDetailFrag.getAdapter().getExoplayer != null) {
+                    stepDetailFrag.getAdapter().getExoplayer.stop();
+                    stepDetailFrag.getAdapter().getExoplayer.release();
+                }
+            }
+            //TODO Check tapped button id and store
+            //TODO add the fragment
+            fragmentManager.putFragment(outState, "frag_steps", fragmentManager.findFragmentById(R.id.steps_detail_tablet));
 
-
+        }
     }
 
 
-    //TODO onCLICK METHOD TO WORK
     @Override
     public void onStepSelected(int position) {
-        if (position == 0) {
+        //TODO Implemet onStepSelected change fragment on tap
+        if (!tabletPane) {
+            if (position == 0) {
 
-            IngredientsFragment = new IngredientsFragment();
+                IngredientsFragment = new IngredientsFragment();
 
-            fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, IngredientsFragment)
-                    .addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, IngredientsFragment)
+                        .addToBackStack(null).commit();
 
+
+            } else {
+                //Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putInt("id_Step", position - 1);
+                stepDetailFrag = new StepDetailFragment();
+                stepDetailFrag.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, stepDetailFrag)
+                        .addToBackStack(null).commit();
+                //Change Button Color
+
+
+            }
         } else {
-            //Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
-            Bundle bundle = new Bundle();
-            bundle.putInt("id_Step",position-1);
-            stepDetailFrag = new StepDetailFragment();
-            stepDetailFrag.setArguments(bundle);
-            fragmentManager.beginTransaction().replace(R.id.stepsFragmentContainer, stepDetailFrag)
-                    .addToBackStack(null).commit();
+
+            if (position == 0) {
+
+                IngredientsFragment = new IngredientsFragment();
+
+                fragmentManager.beginTransaction().replace(R.id.steps_detail_tablet, IngredientsFragment)
+                        .addToBackStack(null).commit();
+
+
+            } else {
+                //Toast.makeText(this, String.valueOf(position - 1), Toast.LENGTH_SHORT).show();
+                if (stepDetailFrag != null && stepDetailFrag.getAdapter().getExoplayer != null) {
+                    stepDetailFrag.getAdapter().getExoplayer.stop();
+                    stepDetailFrag.getAdapter().getExoplayer.release();
+                }
+                Bundle bundle = new Bundle();
+                bundle.putInt("id_Step", position - 1);
+                stepDetailFrag = new StepDetailFragment();
+                stepDetailFrag.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.steps_detail_tablet, stepDetailFrag)
+                        .addToBackStack(null).commit();
+            }
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
     }
 
     @Override
     public void onBackPressed() {
-        if(stepDetailFrag!=null && stepDetailFrag.getAdapter().getExoplayer!=null){
-            stepDetailFrag.getAdapter().getExoplayer.stop();
-            stepDetailFrag.getAdapter().getExoplayer.release();
+        if (!tabletPane) {
+            if (stepDetailFrag != null && stepDetailFrag.getAdapter().getExoplayer != null) {
+                stepDetailFrag.getAdapter().getExoplayer.stop();
+                stepDetailFrag.getAdapter().getExoplayer.release();
+            }
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
+            } else {
+                super.onBackPressed();
+
+
+                finish();
+            }
+
         }
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
-
-            //TODO Check removing finish()
-            finish();
-        }
-
-
+        //super.onBackPressed();
+        finish();
     }
 }

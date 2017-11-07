@@ -39,6 +39,7 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
     StepForRecipe allDetails;
     Context context;
     public SimpleExoPlayer getExoplayer;
+    boolean tabletMode;
 
     public boolean isLandscape() {
         return landscape;
@@ -64,9 +65,11 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
         int layoutId = R.layout.step_detail_item;
         context = parent.getContext();
 
+
         boolean shouldAttach = false;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(layoutId, parent, shouldAttach);
+
         StepDetailViewHolder stepDetails = new StepDetailViewHolder(view);
         ButterKnife.bind(context, view);
         return stepDetails;
@@ -132,12 +135,13 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
             } else {
                 //Log.d("NA At"+String.valueOf(position),allDetails.getVideoUrl());
                 playerView.setVisibility(View.GONE);
-                TextView textView =(TextView) itemView.findViewById(R.id.step_description);
+                TextView textView = (TextView) itemView.findViewById(R.id.step_description);
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(allDetails.getDesc());
             }
             if (stepDescriptionItem != null) {
                 stepDescriptionItem.setText(allDetails.getDesc());
+
             }
             getExoplayer = exoPlayer;
         }

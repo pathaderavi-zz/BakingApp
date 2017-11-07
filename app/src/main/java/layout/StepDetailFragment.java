@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,13 +44,13 @@ public class StepDetailFragment extends Fragment {
     @BindView(R.id.stepDetailRecycler)
     RecyclerView stepDetailsRecycler;
     boolean landscape;
+    boolean tabletMode;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             step_id = savedInstanceState.getInt("step_id");
-
 
         }
     }
@@ -57,9 +59,15 @@ public class StepDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("step_id", step_id);
+
         if (getAdapter().getExoplayer != null) {
             long time = getAdapter().getExoplayer.getCurrentPosition();
             outState.putLong("seek_time_frag", time);
+        }
+        if (landscape) {
+            outState.putInt("landscape", 1);
+        } else {
+            outState.putInt("landscape", 0);
         }
 
     }
@@ -78,6 +86,13 @@ public class StepDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        tabletMode = getActivity().findViewById(R.id.tablet_detail_activity) != null;
+
+        final View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
+
+        landscape = (view.findViewById(R.id.linearRecipeStepDetail) != null);
+
+
         ArrayList<RecipeList> check = getActivity().getIntent().getParcelableArrayListExtra("check");
 
         id_s = getActivity().getIntent().getIntExtra("id", 0);
@@ -85,128 +100,133 @@ public class StepDetailFragment extends Fragment {
 
         recipeStepDetails = check.get(id_s).getSteps();
 
-        final View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
+
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         ButterKnife.bind(this, view);
         stepDetailsRecycler.setLayoutManager(layoutManager);
         stepDetailsRecycler.setHasFixedSize(true);
-
+        //TODO Check
         if (savedInstanceState == null) {
             step_id = getArguments().getInt("id_Step");
         } else {
             step_id = savedInstanceState.getInt("step_id");
         }
+        if (!tabletMode) {
+            previous.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if ((view.findViewById(R.id.linearRecipeStepDetail) != null)) {
+                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+                        linearLayout.setVisibility(View.GONE);
+                    }
+                    if (adapter.getExoplayer != null) {
+                        Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
+                        adapter.getExoplayer.stop();
+                        adapter.getExoplayer.release();
+                    }
+                    step_id = step_id - 1;
+                    if (step_id > 0) {
+                        previous.setVisibility(View.VISIBLE);
 
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
+
+                        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                        stepDetailsRecycler.setAdapter(adapter);
+
+                    } else {
+
+                        previous.setVisibility(View.GONE);
+                    }
+                    if (step_id < recipeStepDetails.size() - 1) {
+
+                        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                        stepDetailsRecycler.setAdapter(adapter);
+
+
+                        next.setVisibility(View.VISIBLE);
+                    } else {
+                        next.setVisibility(View.GONE);
+                    }
+
+                }
+
+            });
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if ((view.findViewById(R.id.linearRecipeStepDetail) != null)) {
+                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
+                        linearLayout.setVisibility(View.GONE);
+                    }
+                    if (adapter.getExoplayer != null) {
+                        Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
+                        adapter.getExoplayer.stop();
+                        adapter.getExoplayer.release();
+                    }
+                    step_id = step_id + 1;
+
+                    if (step_id < recipeStepDetails.size() - 1) {
+                        next.setVisibility(View.VISIBLE);
+
+                        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                        stepDetailsRecycler.setAdapter(adapter);
+
+                    } else {
+                        next.setVisibility(View.GONE);
+                    }
+                    if (step_id > 0) {
+                        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+
+                        stepDetailsRecycler.setAdapter(adapter);
+
+                        previous.setVisibility(View.VISIBLE);
+                    } else {
+                        previous.setVisibility(View.GONE);
+                    }
+
+                }
+
+            });
+
+            if (!(step_id > 0)) {
+                previous.setVisibility(View.GONE);
+
+            }
+            if (!(step_id < recipeStepDetails.size() - 1)) {
+
+                next.setVisibility(View.GONE);
+
+            }
+
+            adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
+            if (view.findViewById(R.id.linearRecipeStepDetail) != null) {
+                if (recipeStepDetails.get(step_id).getVideoUrl().length() < 10) {
                     LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
-                    linearLayout.setVisibility(View.GONE);
+                    linearLayout.setVisibility(View.VISIBLE);
                 }
-                if (adapter.getExoplayer != null) {
-                    Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
-                    adapter.getExoplayer.stop();
-                    adapter.getExoplayer.release();
-                }
-                step_id = step_id - 1;
-                if (step_id > 0) {
-                    previous.setVisibility(View.VISIBLE);
-
-
-                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-
-                    stepDetailsRecycler.setAdapter(adapter);
-
-                } else {
-
-                    previous.setVisibility(View.GONE);
-                }
-                if (step_id < recipeStepDetails.size() - 1) {
-
-                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-
-                    stepDetailsRecycler.setAdapter(adapter);
-
-
-                    next.setVisibility(View.VISIBLE);
-                } else {
-                    next.setVisibility(View.GONE);
-                }
-
             }
+            //TODO CHeck
 
-        });
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
-                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
-                    linearLayout.setVisibility(View.GONE);
-                }
-                if (adapter.getExoplayer != null) {
-                    Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
-                    adapter.getExoplayer.stop();
-                    adapter.getExoplayer.release();
-                }
-                step_id = step_id + 1;
-
-                if (step_id < recipeStepDetails.size() - 1) {
-                    next.setVisibility(View.VISIBLE);
-
-                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-
-                    stepDetailsRecycler.setAdapter(adapter);
-
-                } else {
-                    next.setVisibility(View.GONE);
-                }
-                if (step_id > 0) {
-                    adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-
-                    stepDetailsRecycler.setAdapter(adapter);
-
-                    previous.setVisibility(View.VISIBLE);
-                } else {
-                    previous.setVisibility(View.GONE);
-                }
-
-            }
-
-        });
-
-        if (!(step_id > 0)) {
-            previous.setVisibility(View.GONE);
-
-        }
-        if (!(step_id < recipeStepDetails.size() - 1)) {
-
-            next.setVisibility(View.GONE);
+        } else {
+           next.setVisibility(View.GONE);
+           previous.setVisibility(View.GONE);
+//            if(adapter!=null){
+//                Log.d("Video is ","Playing");
+//            if(adapter.getExoplayer!=null){
+//                adapter.getExoplayer.stop();
+//                adapter.getExoplayer.release();
+//            }
+//            }
+            adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
 
         }
 
 
-        adapter = new StepDetailAdapter(recipeStepDetails.get(step_id));
-        if (view.findViewById(R.id.linearRecipeStepDetail) != null) {
-            if (recipeStepDetails.get(step_id).getVideoUrl().length() < 10) {
-                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-        }
-
-        if((view.findViewById(R.id.linearRecipeStepDetail) != null) ){
-           Log.d("Check Here","Button In");
-           //(recipeStepDetails.get(step_id).getVideoUrl().length() > 10) &&
-//            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearRecipeStepDetail);
-//            previous.setVisibility(View.GONE);
-//            next.setVisibility(View.GONE);
-        }
-
-
-        //Log.d("Landscape Status", String.valueOf(adapter.landscape));
         if (savedInstanceState != null && (savedInstanceState.getLong("seek_time_frag") > 0)) {
-            adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag") - 1000);
+            adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
         }
         stepDetailsRecycler.setAdapter(adapter);
 

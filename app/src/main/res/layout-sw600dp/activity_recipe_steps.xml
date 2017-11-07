@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:id="@+id/tablet_detail_activity">
+
+    <fragment
+        android:id="@+id/master_list_steps"
+        android:name="layout.RecipeStepFragment"
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="2dp"/>
+    <!--<fragment> tag so it does not change at the runtime-->
+
+
+    <FrameLayout
+
+        android:id="@+id/steps_detail_tablet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside" />
+
+
+</LinearLayout>

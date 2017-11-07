@@ -1,6 +1,7 @@
 package com.example.ravikiranpathade.bakingapp.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.example.ravikiranpathade.bakingapp.R;
 import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
 import com.example.ravikiranpathade.bakingapp.singleList.StepForRecipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +29,15 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     List<StepForRecipe> stepForRecipe;
 
     Context context;
+    RecipeStepsViewHolder stepsViewHolder;
+    View view;
+    int p;
+    boolean tabletMode;
+    public ArrayList<Integer> getTrackClick() {
+        return trackClick;
+    }
 
+    ArrayList<Integer> trackClick;
 
     public interface RecipeStepAdapterOnClick {
         void onClick(int position);
@@ -47,21 +57,25 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public RecipeStepsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = R.layout.steps_list_item;
         context = parent.getContext();
-
+        tabletMode = parent.findViewById(R.id.stepDetailItemLandscapeTablet)!=null;
+        Log.d("Tablet Mode",String.valueOf(tabletMode));
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         boolean shouldAttach = false;
-        View view = layoutInflater.inflate(layoutId, parent, shouldAttach);
+        view = layoutInflater.inflate(layoutId, parent, shouldAttach);
         ButterKnife.bind(this, view);
 
-        RecipeStepsViewHolder stepsViewHolder = new RecipeStepsViewHolder(view);
+        stepsViewHolder = new RecipeStepsViewHolder(view);
 
         return stepsViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
+    public void onBindViewHolder(final RecipeStepsViewHolder holder, int position) {
+        //Log.d(String.valueOf(holder.getOldPosition())+" Here Holder Pos",String.valueOf(holder.getAdapterPosition()));
+        //holder.itemView.setSelected();
 
         holder.bind(position);
+
 
     }
 
@@ -80,27 +94,31 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     }
 
     class RecipeStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         @BindView(R.id.stepsListButton)
         Button stepsListButton;
-
         Context mHolderContext;
 
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
+            itemView.setClickable(true);
+            if(trackClick==null) {
+                trackClick = new ArrayList<>();
+                trackClick.add(0);
+            }
+            int ix = trackClick.get(trackClick.size()-1);
+
             mHolderContext = itemView.getContext();
             ButterKnife.bind(this, itemView);
-
             stepsListButton.setOnClickListener(this);
         }
 
         public void bind(final int position) {
             if (position == 0) {
-
-                //ingredients.setText("Check All the Ingredients");
-
                 stepsListButton.setText("All Ingredients");
-                stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
+               // stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
+
             } else {
                 //TODO Change color
                 //stepsListButton.setBackgroundColor(context.getResources().getColor(R.color.ingredientsButton));
@@ -113,14 +131,15 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                 }
             }
 
+
         }
 
         //Done CLICKLISTENER
         @Override
         public void onClick(View v) {
+
             int position = getAdapterPosition();
             mClickHandler.onClick(position);
-
         }
     }
 }
