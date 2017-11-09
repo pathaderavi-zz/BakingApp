@@ -2,10 +2,12 @@ package layout;
 
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -47,7 +49,9 @@ public class RecipeListFragment extends Fragment {
     Bundle bundle;
     boolean tablet;
     Unbinder bind;
-
+    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences;
+    String jsonResponse;
 
     public RecipeListFragment() {
         // Required empty public constructor
@@ -63,33 +67,34 @@ public class RecipeListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         bundle = savedInstanceState;
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        editor = sharedPreferences.edit();
 
         view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
-        tablet = (view.findViewById(R.id.fragmentContainerTablet)!=null);
+        tablet = (view.findViewById(R.id.fragmentContainerTablet) != null);
         bind = ButterKnife.bind(this, view);
-        if(!tablet) {
+        if (!tablet) {
             recipeListRecycler.setLayoutManager(linearLayoutManager);
             recipeListRecycler.setHasFixedSize(true);
-        }else{
-            recipeListRecycler.setLayoutManager(new GridLayoutManager(view.getContext(),3));
+        } else {
+            recipeListRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
         }
 
         recipeLists = new ArrayList<>();
-        if(bundle!=null) {
+        if (bundle != null) {
             //Log.d("Fetch Executed There",bundle.toString());
             recipeLists = savedInstanceState.getParcelableArrayList("wholeArray");
             recipeListAdapter = new RecipeListAdapter(recipeLists);
             recipeListRecycler.setAdapter(recipeListAdapter);
-            Log.d("Check Run Bundle",recipeLists.get(0).getRecipeName());
+            Log.d("Check Run Bundle", recipeLists.get(0).getRecipeName());
 
         }
         //Log.d("Fetch Execute Check",String.valueOf(bundle==null));
-        if(!recipeLists.isEmpty()){
-            Log.d("Check Run",recipeLists.get(0).getRecipeName());
+        if (!recipeLists.isEmpty()) {
+            Log.d("Check Run", recipeLists.get(0).getRecipeName());
         }
-        if(bundle==null) {
-            Log.d("Check Run","Fetch Execute");
+        if (bundle == null) {
+            Log.d("Check Run", "Fetch Execute");
             new FetchRecipes().execute();
         }
         //recipeListButton.setText("Fragment Set");
@@ -101,16 +106,18 @@ public class RecipeListFragment extends Fragment {
         protected Void doInBackground(String... params) {
             String res = null;
             try {
-               // Log.d("Check Bundle",String.valueOf(bundle==null));
 
-                    res = QueryUtils.makeHTTPrequest(QueryUtils.createURL(QueryUtils.QUERY_URL));
 
+                res = QueryUtils.makeHTTPrequest(QueryUtils.createURL(QueryUtils.QUERY_URL));
+
+                editor.putString("wholeResponse", res);
+                editor.apply();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-                recipeLists = QueryUtils.extractRecipes(res);
+            recipeLists = QueryUtils.extractRecipes(res);
 
 
             return null;

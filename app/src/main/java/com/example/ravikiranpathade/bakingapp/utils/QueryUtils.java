@@ -102,7 +102,7 @@ public class QueryUtils {
             }
         }
 
-        Log.d("Response ",response);
+       // Log.d("Response ",response);
         return response;
     }
 

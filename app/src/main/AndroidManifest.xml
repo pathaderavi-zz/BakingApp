@@ -22,7 +22,22 @@
             android:name=".RecipeDetailSteps"
             android:label="Recipe Steps"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RecipeStepsActivity"></activity>
+        <activity android:name=".RecipeStepsActivity" />
+
+        <receiver android:name=".IngredientsList">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ingredients_list_info" />
+        </receiver>
+        <service android:name="widget.IngredientsWidgetService"/>
+        <service android:name=".ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+
+        </service>
     </application>
 
 </manifest>

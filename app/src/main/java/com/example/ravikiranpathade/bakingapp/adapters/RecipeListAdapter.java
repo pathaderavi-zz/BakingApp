@@ -3,8 +3,10 @@ package com.example.ravikiranpathade.bakingapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ravikiranpathade.bakingapp.IngredientsList;
 import com.example.ravikiranpathade.bakingapp.R;
 import com.example.ravikiranpathade.bakingapp.RecipeStepsActivity;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
@@ -24,6 +27,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import widget.IngredientsWidgetService;
 
 /**
  * Created by ravikiranpathade on 10/13/17.
@@ -95,7 +99,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         }
 
-        public void bind(int id) {
+        public void bind(final int id) {
 
             mRecipeListButton.setText(mRecipeList.get(id).getRecipeName());
 
@@ -104,6 +108,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                 public void onClick(View v) {
 
                     Intent newIntent = new Intent(context, RecipeStepsActivity.class);
+
+                    SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = s.edit();
+                    editor.putInt("recipe_id",id);
+                    editor.putString("recipe_name",mRecipeList.get(id).getRecipeName());
+                    editor.apply();
+
+                    Intent newI = new Intent(context, IngredientsWidgetService.class);
+                    newI.setAction(IngredientsWidgetService.ACTION_SEE_INGREDIENTS);
+                    context.startService(newI);
 
                     newIntent.putParcelableArrayListExtra("check", (ArrayList<? extends Parcelable>) mRecipeList);
                     newIntent.putExtra("id", getAdapterPosition());

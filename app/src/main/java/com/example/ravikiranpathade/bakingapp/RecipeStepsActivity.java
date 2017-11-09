@@ -167,8 +167,9 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
                 finish();
             }
 
-        }
+        }else{
         //super.onBackPressed();
         finish();
+        }
     }
 }
