@@ -25,8 +25,7 @@ public class IngredientsList extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int sample, int appWidgetId) {
-        Log.d("From Update", "Appwidget");
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredients_list);
 
@@ -35,7 +34,7 @@ public class IngredientsList extends AppWidgetProvider {
         Intent widgetIntent = new Intent(context, ListWidgetService.class);
         widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         widgetIntent.setData(Uri.parse(widgetIntent.toUri(Intent.URI_INTENT_SCHEME)));
-
+        views.setTextViewText(R.id.appwidget_text,"No Recipes Selected");
         if(PreferenceManager.getDefaultSharedPreferences(context).getInt("recipe_id",-1)<0){
             views.setTextViewText(R.id.appwidget_text,"No Recipes Selected");
         }else{

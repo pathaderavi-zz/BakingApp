@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class StepDetailFragment extends Fragment {
-
+    //TODO When Internet Connection un-available
     List<StepForRecipe> recipeStepDetails;
     //    @BindView(R.id.step_detail_desc)
 //    TextView stepDetail;
@@ -46,6 +46,7 @@ public class StepDetailFragment extends Fragment {
     boolean landscape;
     boolean tabletMode;
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -53,6 +54,26 @@ public class StepDetailFragment extends Fragment {
             step_id = savedInstanceState.getInt("step_id");
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getAdapter().getExoplayer != null) {
+            getAdapter().getExoplayer.setPlayWhenReady(false);
+        }
+        Log.d("onPause","Running");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //TODO Resume Video
+        if (getAdapter().getExoplayer != null) {
+            getAdapter().getExoplayer.setPlayWhenReady(true);
+        }
+
+        Log.d("onResume","Running");
     }
 
     @Override
