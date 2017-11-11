@@ -1,6 +1,9 @@
 package layout;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,6 +48,7 @@ public class StepDetailFragment extends Fragment {
     RecyclerView stepDetailsRecycler;
     boolean landscape;
     boolean tabletMode;
+    @BindView(R.id.noInternetStepDetail) TextView noInternet;
 
 
     @Override
@@ -60,7 +64,7 @@ public class StepDetailFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (getAdapter().getExoplayer != null) {
-            getAdapter().getExoplayer.setPlayWhenReady(false);
+            //getAdapter().getExoplayer.setPlayWhenReady(false);
         }
         Log.d("onPause","Running");
     }
@@ -70,7 +74,7 @@ public class StepDetailFragment extends Fragment {
         super.onResume();
         //TODO Resume Video
         if (getAdapter().getExoplayer != null) {
-            getAdapter().getExoplayer.setPlayWhenReady(true);
+            //getAdapter().getExoplayer.setPlayWhenReady(true);
         }
 
         Log.d("onResume","Running");
@@ -250,8 +254,26 @@ public class StepDetailFragment extends Fragment {
             adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
         }
         stepDetailsRecycler.setAdapter(adapter);
+        if(!isConnected()){
+            stepDetailsRecycler.setVisibility(View.GONE);
+            if(!landscape) {
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.db1_root);
+                linearLayout.setVisibility(View.INVISIBLE);
+            }
+            noInternet.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
 
+    public boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+
+    }
 }

@@ -2,7 +2,10 @@ package layout;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
@@ -52,6 +55,8 @@ public class RecipeListFragment extends Fragment {
     SharedPreferences.Editor editor;
     SharedPreferences sharedPreferences;
     String jsonResponse;
+    @BindView(R.id.noInternet)
+    TextView noInternet;
 
     public RecipeListFragment() {
         // Required empty public constructor
@@ -84,9 +89,20 @@ public class RecipeListFragment extends Fragment {
         if (bundle != null) {
             //Log.d("Fetch Executed There",bundle.toString());
             recipeLists = savedInstanceState.getParcelableArrayList("wholeArray");
-            recipeListAdapter = new RecipeListAdapter(recipeLists);
-            recipeListRecycler.setAdapter(recipeListAdapter);
-            Log.d("Check Run Bundle", recipeLists.get(0).getRecipeName());
+            if (recipeLists.size() > 0) {
+
+                recipeListAdapter = new RecipeListAdapter(recipeLists);
+                recipeListRecycler.setAdapter(recipeListAdapter);
+                noInternet.setVisibility(View.GONE);
+            } else {
+                if (isConnected()) {
+                    new FetchRecipes().execute();
+                    noInternet.setVisibility(View.GONE);
+                } else {
+
+                    noInternet.setVisibility(View.VISIBLE);
+                }
+            }
 
         }
         //Log.d("Fetch Execute Check",String.valueOf(bundle==null));
@@ -94,8 +110,12 @@ public class RecipeListFragment extends Fragment {
             Log.d("Check Run", recipeLists.get(0).getRecipeName());
         }
         if (bundle == null) {
-            Log.d("Check Run", "Fetch Execute");
-            new FetchRecipes().execute();
+            noInternet.setVisibility(View.GONE);
+            if (isConnected()) {
+                new FetchRecipes().execute();
+            } else {
+                noInternet.setVisibility(View.VISIBLE);
+            }
         }
         //recipeListButton.setText("Fragment Set");
         return view;
@@ -153,5 +173,16 @@ public class RecipeListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         bind.unbind();
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+
     }
 }
