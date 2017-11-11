@@ -37,18 +37,24 @@ public class RecipeListTest {
 
         onView(withId(R.id.recipeListRecycler)).check(matches(hasDescendant(withText("Nutella Pie"))));
     }
-    //TODO This Test Case
     @Test
-    public void checkNextActivityText(){
-        try {
-            Thread.sleep(1000);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        onData(ViewMatchers.withId(R.id.recipeListRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        onView(withText("All Ingredients")).check(matches(isDisplayed()));
+    public void checkNextActivityTextRecycler(){
+
+        onView(ViewMatchers.withId(R.id.recipeListRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+
+        onView(withId(R.id.stepsListRecycler)).check(matches(isDisplayed()));
 
     }
+
+    @Test
+    public void checkNextActivityText(){
+
+        onView(ViewMatchers.withId(R.id.recipeListRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+
+        onView(withId(R.id.stepsListRecycler)).check(matches(hasDescendant(withText("All Ingredients"))));
+
+    }
+
 
 
 
