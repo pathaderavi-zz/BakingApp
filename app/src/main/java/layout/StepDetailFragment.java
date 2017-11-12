@@ -64,9 +64,8 @@ public class StepDetailFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (getAdapter().getExoplayer != null) {
-            //getAdapter().getExoplayer.setPlayWhenReady(false);
+            getAdapter().getExoplayer.setPlayWhenReady(false);
         }
-        Log.d("onPause","Running");
     }
 
     @Override
@@ -74,10 +73,10 @@ public class StepDetailFragment extends Fragment {
         super.onResume();
         //TODO Resume Video
         if (getAdapter().getExoplayer != null) {
-            //getAdapter().getExoplayer.setPlayWhenReady(true);
+
+            getAdapter().getExoplayer.setPlayWhenReady(true);
         }
 
-        Log.d("onResume","Running");
     }
 
     @Override
