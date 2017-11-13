@@ -48,7 +48,8 @@ public class StepDetailFragment extends Fragment {
     RecyclerView stepDetailsRecycler;
     boolean landscape;
     boolean tabletMode;
-    @BindView(R.id.noInternetStepDetail) TextView noInternet;
+    @BindView(R.id.noInternetStepDetail)
+    TextView noInternet;
 
 
     @Override
@@ -87,6 +88,8 @@ public class StepDetailFragment extends Fragment {
         if (getAdapter().getExoplayer != null) {
             long time = getAdapter().getExoplayer.getCurrentPosition();
             outState.putLong("seek_time_frag", time);
+            getAdapter().getExoplayer.stop();
+            getAdapter().getExoplayer.release();
         }
         if (landscape) {
             outState.putInt("landscape", 1);
@@ -145,7 +148,7 @@ public class StepDetailFragment extends Fragment {
                         linearLayout.setVisibility(View.GONE);
                     }
                     if (adapter.getExoplayer != null) {
-                        Log.d("ExoPlayer", String.valueOf(adapter.getExoplayer == null));
+
                         adapter.getExoplayer.stop();
                         adapter.getExoplayer.release();
                     }
@@ -235,8 +238,8 @@ public class StepDetailFragment extends Fragment {
             //TODO CHeck
 
         } else {
-           next.setVisibility(View.GONE);
-           previous.setVisibility(View.GONE);
+            next.setVisibility(View.GONE);
+            previous.setVisibility(View.GONE);
 //            if(adapter!=null){
 //                Log.d("Video is ","Playing");
 //            if(adapter.getExoplayer!=null){
@@ -253,9 +256,9 @@ public class StepDetailFragment extends Fragment {
             adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
         }
         stepDetailsRecycler.setAdapter(adapter);
-        if(!isConnected()){
+        if (!isConnected()) {
             stepDetailsRecycler.setVisibility(View.GONE);
-            if(!landscape) {
+            if (!landscape) {
                 LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.db1_root);
                 linearLayout.setVisibility(View.INVISIBLE);
             }
