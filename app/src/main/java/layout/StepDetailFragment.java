@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class StepDetailFragment extends Fragment {
-    //TODO When Internet Connection un-available
+
     List<StepForRecipe> recipeStepDetails;
     //    @BindView(R.id.step_detail_desc)
 //    TextView stepDetail;
@@ -83,9 +83,10 @@ public class StepDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("step_id", step_id);
-
+        Log.d("Check sved",String.valueOf(getAdapter().getExoplayer!=null));
         if (getAdapter().getExoplayer != null) {
             long time = getAdapter().getExoplayer.getCurrentPosition();
+            Log.d("Check Fragment Sved",String.valueOf(time));
             outState.putLong("seek_time_frag", time);
         }
         if (landscape) {
@@ -252,7 +253,12 @@ public class StepDetailFragment extends Fragment {
         if (savedInstanceState != null && (savedInstanceState.getLong("seek_time_frag") > 0)) {
             adapter.setSeekTimePosition(savedInstanceState.getLong("seek_time_frag"));
         }
+        //Log.d("Check Fragment",String.valueOf(savedInstanceState!=null));
+        if(savedInstanceState!=null){
+            Log.d("Check Fragment Frag",String.valueOf(savedInstanceState.getLong("seek_time_frag")));
+        }
         stepDetailsRecycler.setAdapter(adapter);
+
         if(!isConnected()){
             stepDetailsRecycler.setVisibility(View.GONE);
             if(!landscape) {

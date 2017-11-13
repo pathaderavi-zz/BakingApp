@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ravikiranpathade.bakingapp.R;
@@ -24,6 +25,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -91,7 +93,8 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
         TextView stepDescriptionItem;
         Context holderContext;
         public SimpleExoPlayer exoPlayer;
-
+        @BindView(R.id.exoPlayerThumbnail)
+        ImageView thumbnailView;
         public @BindView(R.id.exoPlayer)
         SimpleExoPlayerView playerView;
 
@@ -108,29 +111,58 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
             landscape = (itemView.findViewById(R.id.stepDetailItemLandscape) == null);
             holderContext = itemView.getContext();
 
-            //
-            //Set Click Listener here if required
-
         }
 
         public void bind(int position) {
+
             if (landscape) {
                 Log.d("Entered Here ", "Landscape");
                 stepDescriptionItem = (TextView) itemView.findViewById(R.id.step_description);
             }
-            Log.d("Check Landscape", String.valueOf(landscape));
+            //Log.d("Check Landscape", String.valueOf(landscape));
             ButterKnife.bind(this, itemView);
 
             playerView.setDefaultArtwork(BitmapFactory.decodeResource
                     (context.getResources(), R.drawable.exo_controls_play));
-            Log.d("Video URL", "Check" + String.valueOf(exoPlayer == null));
+            //Log.d("Video URL", "Check" + String.valueOf(exoPlayer == null));
+
 
             if (allDetails.getVideoUrl().length() > 10) {
-                //Log.d("Av At"+String.valueOf(position),allDetails.getVideoUrl());
-                initializePlayer(Uri.parse(allDetails.getVideoUrl()));
+                Log.d("Entered Here ", "CheckUrl"+String.valueOf(seekTimePosition));
+                if(seekTimePosition==0){
+                    thumbnailView.setVisibility(View.VISIBLE);
+                    if(allDetails.getThumbnailUrl().length()>10){
+                        Picasso.with(context).load(allDetails.getThumbnailUrl()).into(thumbnailView);
+                    }else{
+                        Log.d("Entered Here ", "CheckImg");
+                        Picasso.with(context).load(R.drawable.ic_play_circle_filled_white_24dp).into(thumbnailView);
+                    }
+
+                    thumbnailView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            thumbnailView.setVisibility(View.GONE);
+                            playerView.setVisibility(View.VISIBLE);
+                            initializePlayer(Uri.parse(allDetails.getVideoUrl()));
+
+
+                            getExoplayer = exoPlayer;
+                        }
+                    });
+                }
+                Log.d("Check Seek",String.valueOf(seekTimePosition));
                 if (seekTimePosition > 0) {
+                    thumbnailView.setVisibility(View.GONE);
+                    playerView.setVisibility(View.VISIBLE);
+//                    exoPlayer.stop();
+//                    exoPlayer.release();
+                    initializePlayer(Uri.parse(allDetails.getVideoUrl()));
                     exoPlayer.seekTo(seekTimePosition);
                 }
+
+
+                //  initializePlayer(Uri.parse(allDetails.getThumbnailUrl()));
+
 
             } else {
                 //Log.d("NA At"+String.valueOf(position),allDetails.getVideoUrl());

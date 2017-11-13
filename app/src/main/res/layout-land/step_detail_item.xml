@@ -8,7 +8,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:resize_mode="fit"
-        android:id="@+id/exoPlayer"/>
+        android:id="@+id/exoPlayer"
+        android:visibility="gone"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:id="@+id/exoPlayerThumbnail"
+        android:background="#000"
+        android:src="@drawable/ic_play_circle_filled_white_24dp"
+        android:visibility="visible"
+
+        />
     <TextView
         android:id="@+id/step_description"
         android:layout_height="wrap_content"
