@@ -132,12 +132,14 @@ public class RecipeListFragment extends Fragment {
 
                 editor.putString("wholeResponse", res);
                 editor.apply();
-
+                recipeLists = QueryUtils.extractRecipes(res);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if(recipeLists==null){
+                noInternet.setVisibility(View.VISIBLE);
+            }
 
-            recipeLists = QueryUtils.extractRecipes(res);
 
 
             return null;

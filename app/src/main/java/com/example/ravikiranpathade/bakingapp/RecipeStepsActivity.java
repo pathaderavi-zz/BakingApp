@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.ravikiranpathade.bakingapp.adapters.RecipeStepsAdapter;
@@ -31,6 +32,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_recipe_steps);
@@ -72,6 +74,41 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
 //        }
         }
         getSupportActionBar().setTitle("Recipe Steps");
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id_return = item.getItemId();
+
+        if(id_return==android.R.id.home){
+            if (!tabletPane) {
+                if (stepDetailFrag != null && stepDetailFrag.getAdapter().getExoplayer != null) {
+                    stepDetailFrag.getAdapter().getExoplayer.stop();
+                    stepDetailFrag.getAdapter().getExoplayer.release();
+                }
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStack();
+                } else {
+//                    super.onBackPressed();
+//
+//
+//                    finish();
+                    finish();
+                     super.onOptionsItemSelected(item);
+                }
+
+            } else {
+                //super.onBackPressed();
+                //finish();
+                finish();
+                 super.onOptionsItemSelected(item);
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -167,9 +204,9 @@ public class RecipeStepsActivity extends AppCompatActivity implements RecipeStep
                 finish();
             }
 
-        }else{
-        //super.onBackPressed();
-        finish();
+        } else {
+            //super.onBackPressed();
+            finish();
         }
     }
 

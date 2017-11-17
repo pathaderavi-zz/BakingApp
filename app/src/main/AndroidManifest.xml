@@ -23,6 +23,9 @@
             android:name=".RecipeDetailSteps"
             android:label="Recipe Steps"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.ravikiranpathade.bakingapp.MainActivity" />
         <activity android:name=".RecipeStepsActivity" />
 
         <receiver android:name=".IngredientsList">

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.example.ravikiranpathade.bakingapp.IngredientsList;
 import com.example.ravikiranpathade.bakingapp.R;
 import com.example.ravikiranpathade.bakingapp.RecipeStepsActivity;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +91,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     class RecipeListViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.recipeListButton)
         Button mRecipeListButton;
+        @BindView(R.id.imageRecipe)
+        ImageView recipeImage;
 
 
 
@@ -102,7 +107,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public void bind(final int id) {
 
             mRecipeListButton.setText(mRecipeList.get(id).getRecipeName());
-
+            if(mRecipeList.get(id).getImageUrl().length()>5){
+                recipeImage.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(mRecipeList.get(id).getImageUrl()).into(recipeImage);
+            }
             mRecipeListButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

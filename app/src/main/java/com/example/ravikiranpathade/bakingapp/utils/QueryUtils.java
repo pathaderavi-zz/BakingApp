@@ -163,10 +163,11 @@ public class QueryUtils {
                     //Log.d(quantity+" "+measure,ingredient);
                 }
                 int servings = baseObject.getInt("servings");
+                String imageUrl = baseObject.getString("image");
 //                if(ingredientsList!=null && stepForRecipeList!=null) {
 //                    Log.d("Check Before" + String.valueOf(ingredientsList.size()), String.valueOf(stepForRecipeList.size()));
 //                }
-                recipeListList.add(new RecipeList(id,name,ingredientsList,stepForRecipeList,servings));
+                recipeListList.add(new RecipeList(id,name,ingredientsList,stepForRecipeList,servings,imageUrl));
 
 
 

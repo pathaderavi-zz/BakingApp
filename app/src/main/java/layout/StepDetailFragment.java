@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,7 +67,10 @@ public class StepDetailFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (getAdapter().getExoplayer != null) {
-            getAdapter().getExoplayer.setPlayWhenReady(false);
+
+            //Log.d("Check Seek", String.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getLong("seek_time_pref",0)));
+            getAdapter().getExoplayer.stop();
+            getAdapter().getExoplayer.release();
         }
     }
 
@@ -74,8 +79,11 @@ public class StepDetailFragment extends Fragment {
         super.onResume();
         //TODO Resume Video
         if (getAdapter().getExoplayer != null) {
+            Log.d("Check Seek", String.valueOf(newBundle.getLong("seek_time_frag",0)));
+            adapter.setSeekTimePosition(
+                    newBundle.getLong("seek_time_frag",0));
+            stepDetailsRecycler.setAdapter(adapter);
 
-            getAdapter().getExoplayer.setPlayWhenReady(true);
         }
 
     }
@@ -96,7 +104,7 @@ public class StepDetailFragment extends Fragment {
         } else {
             outState.putInt("landscape", 0);
         }
-
+        newBundle = outState;
     }
 
     public StepDetailAdapter getAdapter() {
@@ -105,6 +113,7 @@ public class StepDetailFragment extends Fragment {
 
     StepDetailAdapter adapter;
     LinearLayoutManager layoutManager;
+    Bundle newBundle;
 
     public StepDetailFragment() {
 

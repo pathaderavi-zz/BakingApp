@@ -89,7 +89,6 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
 
     public class StepDetailViewHolder extends RecyclerView.ViewHolder {
 
-        // @BindView(R.id.step_description)
         TextView stepDescriptionItem;
         Context holderContext;
         public SimpleExoPlayer exoPlayer;
@@ -135,6 +134,7 @@ public class StepDetailAdapter extends RecyclerView.Adapter<StepDetailAdapter.St
                 if (seekTimePosition == 0) {
                     thumbnailView.setVisibility(View.VISIBLE);
                     if (allDetails.getThumbnailUrl().length() > 10) {
+
                         Picasso.with(context).load(allDetails.getThumbnailUrl()).into(thumbnailView);
                     } else {
                         Log.d("Entered Here ", "CheckImg");
