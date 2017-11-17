@@ -136,9 +136,7 @@ public class RecipeListFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(recipeLists==null){
-                noInternet.setVisibility(View.VISIBLE);
-            }
+
 
 
 
@@ -148,9 +146,13 @@ public class RecipeListFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            recipeListAdapter = new RecipeListAdapter(recipeLists);
-            recipeListRecycler.setAdapter(recipeListAdapter);
-
+            if(recipeLists==null){
+                noInternet.setVisibility(View.VISIBLE);
+                noInternet.setText("Error Fetching Results");
+            }else {
+                recipeListAdapter = new RecipeListAdapter(recipeLists);
+                recipeListRecycler.setAdapter(recipeListAdapter);
+            }
 
             //bundle.putParcelableArrayList("recipes", (ArrayList<? extends Parcelable>) recipeLists);
         }
