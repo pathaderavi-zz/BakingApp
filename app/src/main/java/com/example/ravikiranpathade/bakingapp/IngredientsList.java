@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
+
 import java.util.List;
 
 import widget.IngredientsWidgetService;
@@ -22,35 +24,40 @@ import widget.IngredientsWidgetService;
  * Implementation of App Widget functionality.
  */
 public class IngredientsList extends AppWidgetProvider {
-
+    static RemoteViews views;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int sample, int appWidgetId) {
 
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredients_list);
+         views = new RemoteViews(context.getPackageName(), R.layout.ingredients_list);
 
-        //views.setTextViewText(R.id.appwidget_text, String.valueOf(sample));
+         Intent widgetIntent = new Intent(context, ListWidgetService.class);
 
-        Intent widgetIntent = new Intent(context, ListWidgetService.class);
-        widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        widgetIntent.setData(Uri.parse(widgetIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        views.setTextViewText(R.id.appwidget_text,"No Recipes Selected");
         if(PreferenceManager.getDefaultSharedPreferences(context).getInt("recipe_id",-1)<0){
             views.setTextViewText(R.id.appwidget_text,"No Recipes Selected");
-        }else{
+        }else if(PreferenceManager.getDefaultSharedPreferences(context).getInt("recipe_id",-1)>=0){
             String recipename = PreferenceManager.getDefaultSharedPreferences(context).getString("recipe_name","");
             views.setTextViewText(R.id.appwidget_text,"Ingredients For "+recipename);
-            views.setRemoteAdapter(R.id.list_all_ingredients_view,widgetIntent);
+            Log.d("Check Widget","Change");
+            widgetIntent.putExtra("rec_id",PreferenceManager.getDefaultSharedPreferences(context).getInt("recipe_id",-1));
+
+            //THIS SOLVED THE WIDGET MANUAL UPDATE
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.list_all_ingredients_view);
+
+
         }
 
+        views.setRemoteAdapter(R.id.list_all_ingredients_view,widgetIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
 
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        int s = PreferenceManager.getDefaultSharedPreferences(context).getInt("recipe_id",-1);
 
+        updatePlantWidgets(context,appWidgetManager,s,appWidgetIds);
     }
 
     @Override
@@ -66,9 +73,9 @@ public class IngredientsList extends AppWidgetProvider {
     public static void updatePlantWidgets(Context context, AppWidgetManager appWidgetManager, int sample, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, sample, appWidgetId);
-            //Log.d("Check W L","Tapped");
 
         }
     }
+
 }
 

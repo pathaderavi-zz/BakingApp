@@ -35,33 +35,41 @@ public class ListWidgetService extends RemoteViewsService {
         private int mAppWidgetId;
         List<Ingredients> allIngredients;
         List<RecipeList> allRecipies;
+        int dd;
 
         public ListRemoteViewsFactory(Context applicationContext, Intent intent) {
             mContext = applicationContext;
             mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
+            dd = intent.getIntExtra("recipe_id",-1);
+            Log.d("Widget Check Factory",String.valueOf(dd));
+
         }
         public ArrayList<Ingredients> getIngredients(){
-             SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             String response =  s.getString("wholeResponse","");
             allRecipies = new ArrayList<>();
             allRecipies = QueryUtils.extractRecipes(response);
             allIngredients = new ArrayList<>();
             allIngredients = allRecipies.get(s.getInt("recipe_id",-1)).getIngredients();
+            Log.d("Widget ","Checks");
 
             return (ArrayList<Ingredients>) allIngredients;
+
 
         }
 
         @Override
         public void onCreate() {
             getIngredients();
+            Log.d("Constructor "," Widget ");
         }
 
         @Override
         public void onDataSetChanged() {
-
+            getIngredients();
+            Log.d("Constructor "," Widget ");
         }
 
         @Override
@@ -84,7 +92,7 @@ public class ListWidgetService extends RemoteViewsService {
                     String measure = allIngredients.get(position).getQuantity()+" "+allIngredients.get(position).getMeasure()+" Of ";
 
                     rv.setTextViewText(R.id.ingredientWidgetDetails,measure+name);
-                    Log.d("Check Remote",name+"measure");
+                    //Log.d("Check Remote",name+"measure");
 
             }
             return rv;
@@ -111,4 +119,5 @@ public class ListWidgetService extends RemoteViewsService {
             return true;
         }
     }
+
 }

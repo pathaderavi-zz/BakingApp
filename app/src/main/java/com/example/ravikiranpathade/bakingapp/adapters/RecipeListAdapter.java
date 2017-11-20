@@ -1,6 +1,8 @@
 package com.example.ravikiranpathade.bakingapp.adapters;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,8 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ravikiranpathade.bakingapp.IngredientsList;
+import com.example.ravikiranpathade.bakingapp.ListWidgetService;
 import com.example.ravikiranpathade.bakingapp.R;
 import com.example.ravikiranpathade.bakingapp.RecipeStepsActivity;
+import com.example.ravikiranpathade.bakingapp.singleList.Ingredients;
 import com.example.ravikiranpathade.bakingapp.singleList.RecipeList;
 import com.squareup.picasso.Picasso;
 
@@ -129,6 +133,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                     Intent newI = new Intent(context, IngredientsWidgetService.class);
                     newI.setAction(IngredientsWidgetService.ACTION_SEE_INGREDIENTS);
                     context.startService(newI);
+
 
                     newIntent.putParcelableArrayListExtra("check", (ArrayList<? extends Parcelable>) mRecipeList);
                     newIntent.putExtra("id", getAdapterPosition());
